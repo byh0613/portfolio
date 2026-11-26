@@ -1,0 +1,14 @@
+# —— 不进公开仓库的工作文件 ——
+# 这里是站点本体：index.html + assets/。其余是制作过程，留在本地。
+/AGENTS.md
+/PROJECT_MEMORY.md
+/content.json
+/design-board*.html
+/charts-mixue.html
+/tools/
+
+# —— 系统 / 编辑器 ——
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

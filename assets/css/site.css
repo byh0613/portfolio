@@ -1,0 +1,1397 @@
+/* ============================================================
+   邴元昊 · 作品集   site.css
+   主题：漂流 / DRIFT — 浅蓝水面 · 像素瓶 · 卷轴纸
+   规则见 AGENTS.md；改动前先读 PROJECT_MEMORY.md
+   ============================================================ */
+
+@font-face{font-family:'Silkscreen';src:url(../fonts/silkscreen-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Silkscreen';src:url(../fonts/silkscreen-700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Fusion Pixel';src:url(../fonts/fusion-pixel-sc.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Serif SC';src:url(../fonts/serif-sc-sub.woff2) format('woff2');font-weight:200 900;font-display:swap}
+/* 主字体子集已重做（2026-11-25），「往」等 111 个原先缺失的字已并入主文件，
+   所以原来那条 U+5F80 的单字补丁（serif-wang.woff2）撤掉：
+   否则「往」会继续走那份 Regular 的 JP 字形，比周围一圈 ExtraLight 粗一档 */
+
+/* 2026-11-26 子集按「整份文件全取」重建（正文 + 属性值 + 注释 + content.json），
+   1391 字形 / 458KB：补上 aria-label 里的「铭」等 225 个原先漏掉的字。
+   --px 同时加了 Fusion Pixel 后备——Silkscreen 只有 215 字形，
+   缺 → ◀ ▶ ↓ 和 Ⅰ Ⅱ Ⅲ，不加后备时这些符号会掉到各设备自己的等宽字体上，
+   Mac 是 Menlo+苹方、Windows 是 Courier+宋体，翻页箭头每台机器长得都不一样。*/
+
+:root{
+  /* 水面 */
+  --water:#EAF4FB;
+  --ink:#212C3E;
+  --ink-2:#2C5072;
+  --ink-3:#4461A5;
+  --sky:#86DDFB;
+  --peak:#50529D;
+  /* 卷轴 */
+  --scroll:#E9C487;
+  --scroll-edge:#FBF2E9;
+  --rod:#BA845D;
+  --rod-d:#8E5C36;
+  --scroll-ink:#7C3A1F;   /* 纸面内强调，5.12:1 */
+  --mid:#CBA96D;
+  --moss:#4F6B4A;
+  /* 唯一强调 */
+  --accent:#9E5030;
+  /* 线 */
+  --line:rgba(33,44,62,.13);
+  --line-2:rgba(33,44,62,.28);
+
+  --px:'Silkscreen','Fusion Pixel',monospace;
+  --cjk:'Fusion Pixel','Silkscreen',monospace;
+  --serif:'Serif SC',serif;
+  --s:1;
+
+  --ease:cubic-bezier(.62,.02,.2,1);
+  --dur:620ms;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--water);color:var(--ink);font-family:var(--serif);
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* 水面纵深感：上下各一道极淡的天光 */
+.water-texture{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(180deg,rgba(134,221,251,.20) 0%,rgba(234,244,251,0) 30%),
+    linear-gradient(0deg,rgba(134,221,251,.22) 0%,rgba(234,244,251,0) 26%)}
+
+/* 边缘微暗角：只压 6%，用于收住画面，不做滤镜 */
+.edges{position:fixed;inset:0;pointer-events:none;z-index:1;
+  box-shadow:inset 0 0 120px rgba(33,44,62,.05)}
+
+/* ================= 导航 ================= */
+.nav{position:fixed;top:0;left:0;right:0;height:60px;z-index:60;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 40px;
+  background:rgba(234,244,251,.90);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand .cn{font-family:var(--cjk);font-size:24px;line-height:1;letter-spacing:0}
+.brand .en{font-family:var(--px);font-size:8px;color:var(--ink-3);letter-spacing:.18em}
+.tabs{display:flex}
+.tab{font-size:13.5px;color:var(--ink-3);padding:9px 16px;position:relative;
+  transition:color .18s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:'';position:absolute;left:16px;right:16px;
+  bottom:-1px;height:2px;background:var(--accent);
+  transform-origin:left center;animation:tabline .24s ease-out both}
+@keyframes tabline{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){
+  .tab[aria-selected="true"]::after{animation:none}
+}
+.nav-right{display:flex;justify-content:flex-end}
+.btn{font-size:12px;padding:8px 15px;border:1px solid var(--ink);
+  display:inline-flex;align-items:center;gap:9px;
+  transition:background .18s,color .18s}
+.btn i{font-style:normal;font-family:var(--px);font-size:10px}
+.btn:hover{background:var(--ink);color:var(--water)}
+
+/* ================= 舞台 ================= */
+.viewport{position:fixed;inset:60px 0 0 0;overflow:hidden;z-index:2}
+.track{display:flex;height:100%;transition:transform var(--dur) var(--ease);will-change:transform}
+.pane{flex:0 0 100%;height:100%;
+  padding:calc(26px * var(--s)) max(56px, calc((100% - 1440px) / 2)) 40px;
+  display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+.head{flex:0 0 auto}
+/* 每个项目一只漂流瓶：坐在标题行的右端，绝对定位，不参与流式布局 */
+/* 每个项目一只漂流瓶：坐在标题行的右端，绝对定位，不参与流式布局。
+   旋转动画会让包围盒略微变宽，右边留 8px 余量避免越出内边距 */
+.pane-bottle{position:absolute;right:64px;top:calc(20px * var(--s));z-index:3;
+  width:calc(72px * var(--s));height:auto;image-rendering:pixelated;pointer-events:none;
+  filter:drop-shadow(0 calc(5px * var(--s)) calc(7px * var(--s)) rgba(33,44,62,.16));
+  animation:bob 6.5s ease-in-out infinite}
+@keyframes bob{
+  0%,100%{transform:translateY(0) rotate(-1.2deg)}
+  50%{transform:translateY(calc(-6px * var(--s))) rotate(1.2deg)}
+}
+.eyebrow{font-family:var(--px);font-size:9px;letter-spacing:.18em;color:var(--ink-3);
+  display:flex;align-items:center;gap:11px;text-transform:uppercase}
+.eyebrow .num{color:var(--accent)}
+.eyebrow .dash{width:26px;height:1px;background:var(--line-2)}
+.h1{font-family:var(--cjk);font-weight:400;font-size:calc(40px * var(--s));
+  line-height:1.14;margin-top:calc(11px * var(--s));letter-spacing:0}
+/* 英文副标题与中文主标题之间留出视觉 8px。写 margin-top:8px 只够 1.5px——
+   像素字行高 1.14 + 上下留白会吃掉大半，所以按实测差值给 14px */
+.h1 .en{display:block;font-family:var(--px);font-size:calc(17px * var(--s));
+  line-height:1.3;letter-spacing:.04em;margin-top:calc(14px * var(--s));color:var(--ink)}
+
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-start;
+  padding:calc(8px * var(--s)) 0 calc(14px * var(--s));min-height:0;overflow:hidden}
+
+.foot{flex:0 0 auto;height:calc(38px * var(--s));border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:20px}
+.foot .l{font-family:var(--px);font-size:8px;letter-spacing:.15em;color:var(--ink-3)}
+.foot .r{margin-left:auto;font-size:calc(10px * var(--s));color:var(--ink-3);
+  display:flex;align-items:center;gap:10px}
+.foot .r .arw{font-family:var(--px);font-size:10px;color:var(--accent)}
+
+/* 通用文字 */
+.lede{font-size:calc(12.5px * var(--s));line-height:1.92;color:var(--ink-2);max-width:60ch}
+.lede b{font-weight:600;color:var(--ink)}
+.cap{font-family:var(--px);font-size:8px;letter-spacing:.15em;color:var(--accent);
+  text-transform:uppercase;line-height:1;margin-bottom:10px}
+.fine{font-size:calc(9.5px * var(--s));line-height:1.75;color:var(--ink-3);margin-top:10px}
+/* 行高必须显式 1fr，否则 grid 行按内容高度算，两栏撑不满、下半屏会空 */
+/* minmax(0,1fr)：行必须能被内容压住；纯 1fr 时内容一高就把行撑破、整屏溢出 */
+.split{display:grid;grid-template-columns:.94fr 1.06fr;grid-template-rows:minmax(0,1fr);gap:44px;align-items:stretch;height:100%;
+  padding-top:calc(10px * var(--s))}
+.split-l,.split-r{min-width:0;min-height:0;display:flex;flex-direction:column;height:100%;
+  justify-content:space-between;gap:calc(14px * var(--s))}
+/* 右栏一般只有「小标题 + 主图 + 附注」三块：整组居中，不要两端撑开留出大洞；
+   主图本身 flex-grow 的屏（现场证据、户外三张）仍会自己吃满高度 */
+.split-r{justify-content:center}
+/* 左栏结构固定为：导语 → 编码口径 → 原声 → 指标。指标沉到栏底，
+   与右栏末行落在同一条基线上 */
+.split-l > .kpi{margin-top:0}
+/* 原声区块吃掉剩余高度并按纵向均匀铺开，与右栏三组数据对齐 */
+.split-l > .quotes{flex:1 1 auto;justify-content:space-evenly;margin-top:0}
+
+/* ================= 00 封面 ================= */
+.pane.cover{padding:0;overflow:hidden;background:#7ECBDF;cursor:crosshair}
+/* 底图：用户插画铺满，cover 裁切；不用任何滤镜，保持原色 */
+.cover::before{content:'';position:absolute;inset:0;
+  background:url(../img/cover/beach.jpg) center 62%/cover no-repeat;
+  background-color:#7ECBDF;z-index:0}
+/* 文字区压一层极薄的水色，只为读得清，不做奶白蒙版 */
+.cover::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(180deg,rgba(24,60,88,.30) 0%,rgba(24,60,88,.10) 32%,rgba(24,60,88,0) 52%)}
+
+.cover-copy{position:absolute;left:0;right:0;top:calc(78px * var(--s));z-index:4;
+  display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 40px;
+  pointer-events:none}
+.cover-eyebrow{font-family:var(--px);font-size:9px;letter-spacing:.34em;color:rgba(255,255,255,.88);
+  text-transform:uppercase}
+.cover-h{font-family:var(--cjk);font-weight:400;font-size:calc(72px * var(--s));line-height:1.16;
+  color:#fff;margin-top:calc(14px * var(--s));letter-spacing:.02em;
+  text-shadow:0 2px 0 rgba(22,52,74,.42),0 0 calc(18px * var(--s)) rgba(22,52,74,.30)}
+.cover-sub{font-family:var(--cjk);font-size:calc(24px * var(--s));line-height:1.4;
+  color:#FFF3DC;margin-top:calc(16px * var(--s));letter-spacing:.06em;
+  text-shadow:0 2px 0 rgba(22,52,74,.42)}
+.cover-note{font-size:calc(16px * var(--s));line-height:1.7;color:#fff;
+  margin-top:calc(16px * var(--s));letter-spacing:.02em;
+  /* 这行压在亮云与沙滩之间，只靠文字阴影时白字会糊成灰边。
+     改成一条贴身的深色薄带（不是蒙版、不做模糊、不圆角），
+     正文仍然是纯白，对比度才够 */
+  display:inline-block;padding:calc(5px * var(--s)) calc(14px * var(--s));
+  background:rgba(18,46,70,.46)}
+
+/* 海洋小生物：慢慢浮沉，不抢标题 */
+.cover-sea{position:absolute;inset:0;z-index:2;pointer-events:none}
+.cover-sea img{position:absolute;image-rendering:pixelated;
+  filter:drop-shadow(0 calc(4px * var(--s)) calc(6px * var(--s)) rgba(22,52,74,.22))}
+.sea-turtle{left:6%;bottom:16%;width:calc(96px * var(--s));animation:float 7s ease-in-out infinite}
+.sea-pearl{right:9%;bottom:26%;width:calc(56px * var(--s));animation:float 6s ease-in-out infinite .8s}
+.sea-conch{right:22%;bottom:9%;width:calc(40px * var(--s));animation:float 8s ease-in-out infinite 1.6s}
+@keyframes float{
+  0%,100%{transform:translateY(0) rotate(-1.5deg)}
+  50%{transform:translateY(calc(-9px * var(--s))) rotate(1.5deg)}
+}
+
+/* 落瓶容器 */
+.cover-drop{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.cover-drop img{position:absolute;image-rendering:pixelated;
+  animation:dropfall 1.5s cubic-bezier(.45,.05,.62,.98) forwards}
+@keyframes dropfall{
+  0%{transform:translate(-50%,-140px) rotate(-16deg);opacity:0}
+  12%{opacity:1}
+  70%{transform:translate(-50%,var(--fall,240px)) rotate(6deg) scale(1)}
+  88%{opacity:1}
+  100%{transform:translate(-50%,calc(var(--fall,240px) + 26px)) rotate(9deg) scale(.94);opacity:0}
+}
+
+.cover-enter{position:absolute;left:50%;transform:translateX(-50%);
+  bottom:calc(86px * var(--s));z-index:5;
+  font-family:var(--cjk);font-size:calc(24px * var(--s));letter-spacing:.14em;color:#16344A;
+  background:#FFF3DC;border:calc(3px * var(--s)) solid #16344A;
+  padding:calc(19px * var(--s)) calc(52px * var(--s));
+  display:inline-flex;align-items:center;gap:calc(16px * var(--s));
+  box-shadow:calc(6px * var(--s)) calc(6px * var(--s)) 0 rgba(22,52,74,.30);
+  transition:background .18s,color .18s,box-shadow .18s,transform .18s}
+.cover-enter i{font-style:normal;font-family:var(--px);font-size:calc(13px * var(--s))}
+.cover-enter:hover{background:#16344A;color:#FFF3DC;
+  transform:translateX(-50%) translate(-3px,-3px);
+  box-shadow:calc(9px * var(--s)) calc(9px * var(--s)) 0 rgba(22,52,74,.34)}
+.cover-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(54px * var(--s));
+  z-index:5;font-size:calc(10px * var(--s));color:rgba(255,255,255,.92);letter-spacing:.04em;
+  text-shadow:0 1px 0 rgba(22,52,74,.45);pointer-events:none;white-space:nowrap}
+
+
+/* ---------- 牛皮纸展开动效 ----------
+   进入这一屏时纸面从左侧抽出：clip-path 从左向右揭开，同时纸上的字
+   轻微右移跟上，右木轴从纸里滑出。整段 .78s，只在激活时播放一次 */
+/* 节奏：纸先滚开（0–70%），字在纸露出一半时跟上（28–78%），
+   右木轴最后滑出收口。缓动用 ease-out 的中段，不要前面就冲完 */
+.pane.on .head-unroll .hp-leaf{animation:paperOpen 1.05s cubic-bezier(.4,0,.35,1) both}
+.pane.on .head-unroll .hp-mid{animation:paperCopy 1.05s cubic-bezier(.4,0,.35,1) both}
+.pane.on .head-unroll .hp-leaf::after{animation:rodSlide 1.05s cubic-bezier(.4,0,.35,1) both}
+
+@keyframes paperOpen{
+  0%  {clip-path:inset(0 100% 0 0)}
+  70% {clip-path:inset(0 0 0 0)}
+  100%{clip-path:inset(0 0 0 0)}
+}
+@keyframes paperCopy{
+  0%  {opacity:0;transform:translateX(calc(-24px * var(--s)))}
+  28% {opacity:0;transform:translateX(calc(-24px * var(--s)))}
+  82% {opacity:1;transform:none}
+  100%{opacity:1;transform:none}
+}
+@keyframes rodSlide{
+  0%  {opacity:0;transform:translateX(calc(-34px * var(--s)))}
+  62% {opacity:0}
+  100%{opacity:1;transform:none}
+}
+/* 不播放动效时（非激活屏、或用户要求减少动态）保持展开完成态 */
+@media (prefers-reduced-motion:reduce){
+  .pane.on .head-unroll .hp-leaf,
+  .pane.on .head-unroll .hp-mid,
+  .pane.on .head-unroll .hp-leaf::after{animation:none}
+}
+
+/* ================= 目录 · 四只瓶 ================= */
+.pane.toc .body{justify-content:center;padding-top:0}
+.pane.toc .head{flex:0 0 auto}
+/* 行宽不再卡 52ch——原来末尾"分。"会单独折到第二行。现在放 68ch 一行排完；
+   窄屏才允许换行，且用 balance 保证两行长度接近、不出现孤字 */
+.toc-lede{font-size:calc(13.5px * var(--s));line-height:1.9;color:var(--ink-2);
+  margin-top:calc(9px * var(--s));max-width:68ch;text-wrap:balance}
+
+/* 四只瓶错落排开，模块名顺着一条弧线绕在瓶口或瓶底外侧。
+   每列是一张 svg：瓶与弧线同坐标系，所以字永远不会压到瓶身。
+   弧线为二次贝塞尔，顶点 y = 0.25·y₀ + 0.5·yc + 0.25·y₁，改坐标必须重算。
+   纵向用「行高 − 96px」当图高，最大偏移的那一列正好顶到 100%，不会溢出 */
+.toc-grid{display:grid;grid-template-columns:repeat(4,1fr);
+  gap:calc(16px * var(--s));align-items:start;
+  width:100%;height:100%;padding-top:calc(10px * var(--s))}
+
+/* 列高 = 整块高度减去错落下沉量；列内是【编号 / 瓶+弧线字】的纵向堆叠。
+   整组按 90% 缩放，编号补进省下的那 10%，所以总高度仍控制在列高以内 */
+.toc-item{display:flex;justify-content:center;align-items:center;
+  padding:0;min-width:0;height:calc(100% - 96px);
+  transition:transform .22s steps(3)}
+
+/* 错落：四列落点各不相同，上下拉开 26–96px */
+.toc-a{transform:translateY(calc(58px * var(--s)))}
+.toc-b{transform:translateY(0)}
+.toc-c{transform:translateY(calc(92px * var(--s)))}
+.toc-d{transform:translateY(calc(24px * var(--s)))}
+/* hover 的位移要叠加在各自的基础上，否则会跳回同一水平线 */
+.toc-a:hover{transform:translateY(calc(53px * var(--s)))}
+.toc-b:hover{transform:translateY(calc(-5px * var(--s)))}
+.toc-c:hover{transform:translateY(calc(87px * var(--s)))}
+.toc-d:hover{transform:translateY(calc(19px * var(--s)))}
+
+/* 整组缩到原来的 90% */
+.toc-fig{display:block;height:90%;width:auto;max-width:90%;overflow:visible}
+
+/* 编号：像素字，压在弧线外侧（1/3 列在上，2/4 列在下），与弧线末端对齐 */
+/* 编号是 svg 里的 <text>，与瓶、弧线同一坐标系：
+   间距天然一致，不会出现四列各自不同 */
+/* 编号 30 视图单位（实际约 29px，是原来的 2.5 倍）。
+   用 --ink 深墨而不是 --ink-3 浅蓝灰，才真的"醒目"；hover 转砖红 */
+.toc-fig .toc-no{font-family:var(--px);font-weight:700;
+  font-size:30px;letter-spacing:4px;fill:var(--ink);
+  transition:fill .18s}
+.toc-item:hover .toc-no{fill:var(--accent)}
+.toc-fig image{image-rendering:pixelated;
+  filter:drop-shadow(0 calc(3px * var(--s)) calc(6px * var(--s)) rgba(33,44,62,.12));
+  transition:transform .25s var(--ease);transform-box:fill-box;transform-origin:50% 88%}
+.toc-item:hover .toc-fig image{transform:rotate(-2.5deg) scale(1.03)}
+
+/* 悬空漂浮：像瓶子被水面轻轻托着晃。
+   动效挂在 <g> 上，与 hover 的 image transform 互不覆盖。
+   四列周期与相位都不同，避免整齐划一地一起浮 */
+.toc-bob{animation:tocFloat 7.5s ease-in-out infinite;
+  transform-box:fill-box;transform-origin:50% 100%}
+.toc-b .toc-bob{animation-duration:8.6s;animation-delay:-1.2s}
+.toc-c .toc-bob{animation-duration:9.4s;animation-delay:-3.1s}
+.toc-d .toc-bob{animation-duration:8.1s;animation-delay:-4.6s}
+@keyframes tocFloat{
+  0%  {transform:translate3d(0,0,0)      rotate(0deg)}
+  22% {transform:translate3d(-1px,-7px,0) rotate(-1.6deg)}
+  46% {transform:translate3d(0,-2px,0)    rotate(-.3deg)}
+  54% {transform:translate3d(1px,-9px,0)  rotate(.4deg)}
+  78% {transform:translate3d(0,-3px,0)    rotate(1.6deg)}
+  100%{transform:translate3d(0,0,0)      rotate(0deg)}
+}
+@media (prefers-reduced-motion:reduce){
+  .toc-bob{animation:none}
+}
+
+.toc-fig .toc-t{font-family:var(--cjk);font-weight:400;
+  font-size:50px;fill:var(--ink);transition:fill .18s}
+.toc-item:hover .toc-t{fill:var(--accent)}
+
+/* ================= 模块标题：从瓶里抽出的纸条 ================= */
+.head-paper{display:grid;grid-template-columns:calc(68px * var(--s)) 1fr;
+  align-items:center;gap:0}
+.hp-bottle{width:auto;height:calc(84px * var(--s));image-rendering:pixelated;
+  position:relative;z-index:2;margin-right:calc(-9px * var(--s));
+  filter:drop-shadow(0 calc(5px * var(--s)) calc(7px * var(--s)) rgba(33,44,62,.16))}
+.hp-leaf{display:grid;grid-template-columns:9px 1fr 9px;align-items:stretch;
+  min-height:calc(84px * var(--s));background:var(--scroll);
+  border-top:2px solid var(--scroll-edge);border-bottom:2px solid var(--scroll-edge)}
+.hp-leaf::before,.hp-leaf::after{content:'';background:var(--rod);
+  border:1px solid var(--rod-d);box-shadow:inset 2px 0 0 rgba(255,255,255,.28)}
+.hp-leaf::before{grid-column:1;grid-row:1}
+.hp-leaf::after{grid-column:3;grid-row:1}
+.hp-mid{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:center;
+  padding:calc(11px * var(--s)) calc(20px * var(--s)) calc(11px * var(--s)) calc(18px * var(--s));
+  min-width:0}
+/* 纸条内的小标签一律用纸面专用色 #7C3A1F（--accent 在纸上只有 3.49:1） */
+/* 纸条上的 eyebrow：原来 9px，在 1440 屏上几乎读不出「ABOUT ME」。
+   提到 12px（像素字必须 12 的倍数），并加深到 #6B5233 保证纸上对比度 */
+.head-paper .eyebrow{color:#6B5233;font-size:12px;letter-spacing:.16em;gap:12px}
+.head-paper .eyebrow .num{color:var(--scroll-ink)}
+.head-paper .eyebrow .dash{background:rgba(124,58,31,.45)}
+.head-paper .h1{font-size:calc(24px * var(--s));line-height:1.2;margin-top:calc(5px * var(--s));color:var(--ink)}
+.head-paper .h1 .en{display:inline-block;font-size:calc(12px * var(--s));margin-top:0;
+  margin-left:calc(12px * var(--s));color:#6B5233;vertical-align:middle}
+
+/* ================= 01 ABOUT ================= */
+/* ================= 01 关于我 · 档案 =================
+   统一网格：左 1/3 工牌、右 2/3 四区块，栏间距固定 36px。
+   所有标题、正文、分隔线都贴同一条栏线，不凭视觉缩进 */
+.cv{display:grid;grid-template-columns:.86fr 2fr;gap:calc(36px * var(--s));
+  height:100%;min-height:0;align-items:start}
+
+/* ---------- 左栏：工牌 ---------- */
+.cv-side{display:flex;flex-direction:column;align-items:center;
+  min-height:0;height:100%;padding-top:calc(6px * var(--s))}
+.cv-side .ly-hint{align-self:center}
+
+/* 织带 + 金属夹：静止不动，只有工牌本体摆。
+   容器高度要装得下 top(150) + 卡高(372) = 522，再留一点，写 530 */
+.lanyard{position:relative;width:calc(252px * var(--s));height:calc(530px * var(--s));
+  perspective:calc(900px * var(--s));perspective-origin:50% 0}
+
+/* 织带：明黄色尼龙带，带身亮黄 + 横向罗纹 + 彩色爪印印花，两侧各一道略深的黄织边。
+   黄带不能靠加深整体颜色定形——整条压暗会变成土黄脏带；
+   靠两侧织边 + 一道细投影 + 中段提亮来做出"带"的体积感。
+   **高度必须够到卡片顶边（150），否则织带和工牌之间会露出空隙、看着像断开了。 */
+.ly-strap{position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:calc(40px * var(--s));height:calc(158px * var(--s));
+  border-radius:calc(2px * var(--s)) calc(2px * var(--s)) 0 0;
+  background:
+    /* 印花：两列交替的彩色爪印，一上一下错开，像织带上的循环图案。
+       用内联 SVG 做 tile，比叠一堆 div 稳，且随 --s 缩放不走形 */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='76' viewBox='0 0 40 76'%3E%3Cg fill='%232F6FD0' opacity='.85'%3E%3Cellipse cx='11' cy='14' rx='4.6' ry='3.9'/%3E%3Ccircle cx='6.2' cy='8.4' r='1.9'/%3E%3Ccircle cx='10.4' cy='6.4' r='1.9'/%3E%3Ccircle cx='14.6' cy='6.4' r='1.9'/%3E%3Ccircle cx='18.6' cy='8.6' r='1.9'/%3E%3C/g%3E%3Cg fill='%23D6453A' opacity='.85'%3E%3Cellipse cx='29' cy='52' rx='4.6' ry='3.9'/%3E%3Ccircle cx='24.2' cy='46.4' r='1.9'/%3E%3Ccircle cx='28.4' cy='44.4' r='1.9'/%3E%3Ccircle cx='32.6' cy='44.4' r='1.9'/%3E%3Ccircle cx='36.6' cy='46.6' r='1.9'/%3E%3C/g%3E%3C/svg%3E")
+      0 0/calc(40px * var(--s)) calc(76px * var(--s)) repeat-y,
+    /* 横向罗纹：尼龙织带是横纹，间距 3px，方向只能是 0deg —— 斜纹是"布"，横纹才是"带" */
+    repeating-linear-gradient(0deg,
+      rgba(150,118,0,.10) 0 calc(1px * var(--s)),
+      rgba(255,255,255,0) calc(1px * var(--s)) calc(3px * var(--s))),
+    /* 织边：两侧各一道略深的黄窄带，这是织带和布条的区别 */
+    linear-gradient(90deg,
+      #C79A05 0 6%, #E8B90C 6% 9%, transparent 9% 91%,
+      #E8B90C 91% 94%, #C79A05 94% 100%),
+    /* 柱面明暗：中间受光到最亮，两侧收一档，整体仍是同一个黄 */
+    linear-gradient(90deg,#E9BE08 0%,#F8D319 16%,#FFE24A 42%,#FFE24A 58%,#F8D319 84%,#E9BE08 100%);
+  box-shadow:
+    /* 带身厚度：只收两侧 1px，不要整体压暗 */
+    inset calc(1px * var(--s)) 0 0 rgba(160,124,0,.45),
+    inset calc(-1px * var(--s)) 0 0 rgba(160,124,0,.45),
+    /* 落在身后的投影，让带子离开浅蓝底 */
+    0 calc(2px * var(--s)) calc(6px * var(--s)) rgba(33,44,62,.18)}
+/* 顶端收口：带子从画面上方穿进来的暗部，只在带内压一道很淡的黄褐 */
+.ly-strap::before{content:'';position:absolute;inset:0 0 auto 0;
+  height:calc(9px * var(--s));
+  background:linear-gradient(180deg,rgba(140,105,0,.22),rgba(140,105,0,0))}
+/* 底端缝线收口：车线留在夹子上方，别被夹子压住 */
+.ly-strap::after{content:'';position:absolute;left:0;right:0;bottom:calc(26px * var(--s));
+  height:1.5px;
+  background:repeating-linear-gradient(90deg,rgba(150,112,10,.60) 0 3px,transparent 3px 6px)}
+
+/* 金属夹：上窄下宽的梯形扣，骑在「织带底端 + 卡片顶孔」之间把两者咬合。
+   位置必须跨住卡片顶边（top:150）：夹子上半压住织带、下半穿进卡片的吊孔，
+   写小了或挪高了就会出现"织带—夹子—工牌"三段彼此分离的空隙。 */
+.ly-clip{position:absolute;left:50%;top:calc(140px * var(--s));transform:translateX(-50%);
+  width:calc(30px * var(--s));height:calc(34px * var(--s));
+  background:linear-gradient(180deg,#EDF0F4,#B6BFCA 42%,#8B95A3 70%,#C8D0DA);
+  clip-path:polygon(18% 0,82% 0,100% 22%,100% 100%,0 100%,0 22%);
+  box-shadow:0 calc(2px * var(--s)) calc(4px * var(--s)) rgba(33,44,62,.30);
+  z-index:5}
+/* 吊孔：卡片穿过去的那道横缝，开在夹子上半段，露在卡片顶边之上 */
+.ly-clip::after{content:'';position:absolute;left:50%;top:calc(7px * var(--s));
+  transform:translateX(-50%);width:calc(14px * var(--s));height:calc(4px * var(--s));
+  background:#6B7482;border-radius:calc(2px * var(--s));opacity:.7}
+
+/* 摇摆与翻面拆成两层元素，避免两个动效抢同一个 transform：
+   外层 .ly-swing 绕顶端的吊点摆动，内层 .ly-card 只做 rotateY 翻面 */
+/* 工牌尺寸按 1.6:2.25 的证件卡比例。240×338 → 264×372（+10%），
+   同时整体下移：top 128 → 150，让牌子在左栏里更靠下、上方留出织带的呼吸。
+   放大后 margin-left 必须同步改成半宽（-132），否则牌子会偏右 */
+/* 工牌尺寸按 1.6:2.25 的证件卡比例。240×338 → 264×372（+10%），
+   同时整体下移：top 128 → 150，让牌子在左栏里更靠下、上方留出织带的呼吸。
+   放大后 margin-left 必须同步改成半宽（-132），否则牌子会偏右。
+   z-index 低于 .ly-clip：夹子下半段要穿到卡片背后，只露出上半个扣，
+   这样才读成"织带 → 夹子 → 工牌"一条链，而不是三个悬浮件 */
+.ly-swing{position:absolute;left:50%;top:calc(150px * var(--s));
+  width:calc(264px * var(--s));height:calc(372px * var(--s));
+  margin-left:calc(-132px * var(--s));
+  transform-origin:50% calc(-16px * var(--s));
+  animation:lySwing 5.6s ease-in-out infinite;
+  perspective:calc(700px * var(--s));z-index:3;
+  /* 阴影挂在摇摆层上：filter 若加在 .ly-card 上会拍平 preserve-3d，
+     导致背面不显示、正面镜像透出 */
+  filter:drop-shadow(0 calc(9px * var(--s)) calc(15px * var(--s)) rgba(33,44,62,.20))}
+@keyframes lySwing{
+  0%,100%{transform:rotate(-2.4deg)}
+  50%    {transform:rotate(2.4deg)}
+}
+
+.ly-card{position:absolute;inset:0;display:block;
+  border:none;padding:0;background:none;cursor:pointer;
+  transform-style:preserve-3d;
+  transform:rotateY(0deg);
+  transition:transform .82s cubic-bezier(.5,.05,.28,1)}
+.ly-card.is-flipped{transform:rotateY(180deg)}
+
+.ly-face{position:absolute;inset:0;display:block;overflow:hidden;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:#fff;border:1px solid var(--ink)}
+.ly-front{border-radius:calc(3px * var(--s))}
+.ly-back{border-radius:calc(3px * var(--s))}
+
+.ly-front img{width:100%;height:100%;object-fit:cover;object-position:50% 26%;display:block}
+/* 姓名条压在照片下沿，做成工牌的既有版式而不是浮层 */
+.ly-tag{position:absolute;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;gap:calc(2px * var(--s));
+  padding:calc(9px * var(--s)) calc(11px * var(--s)) calc(10px * var(--s));
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.94) 26%,#fff 100%);
+  border-top:1px solid rgba(33,44,62,.14)}
+.ly-tag b{font-family:var(--cjk);font-weight:400;font-size:calc(19px * var(--s));
+  line-height:1.2;color:var(--ink);letter-spacing:.04em}
+.ly-tag i{font-family:var(--px);font-style:normal;font-size:7px;
+  letter-spacing:.16em;color:var(--ink-3)}
+
+.ly-back{transform:rotateY(180deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:calc(18px * var(--s));
+  background:
+    repeating-linear-gradient(0deg,rgba(33,44,62,.045) 0 1px,transparent 1px 9px),
+    #FBF6EC}
+.ly-motto{font-family:'Serif SC',serif;font-weight:400;
+  font-size:calc(31px * var(--s));line-height:1.62;letter-spacing:.1em;
+  color:var(--ink);text-align:center}
+.ly-sig{font-family:var(--px);font-size:7.5px;letter-spacing:.14em;
+  color:var(--ink-3);text-align:center;line-height:1.7;
+  padding-top:calc(10px * var(--s));border-top:1px solid var(--line);width:72%}
+
+/* 翻面提示：9px → 15px，并换到最深墨色。前面加一个翻转图标，提示"可交互" */
+.ly-hint{margin-top:calc(18px * var(--s));font-family:var(--cjk);
+  font-size:calc(15px * var(--s));letter-spacing:.04em;color:var(--ink);
+  text-align:center;line-height:1.5;
+  display:inline-flex;align-items:center;gap:calc(7px * var(--s));
+  padding:calc(6px * var(--s)) calc(13px * var(--s));
+  border:1px solid var(--line-2);background:rgba(255,255,255,.55);
+  transition:border-color .18s,color .18s,background .18s}
+.cv-side:hover .ly-hint{border-color:var(--accent);color:var(--accent)}
+.ly-hint::before{content:'';width:calc(13px * var(--s));height:calc(13px * var(--s));
+  flex:0 0 auto;border:1.5px solid currentColor;border-radius:50%;
+  border-right-color:transparent;border-bottom-color:transparent;
+  transform:rotate(45deg)}
+
+/* ---------- 右栏：四区块 ---------- */
+.cv-main{display:flex;flex-direction:column;gap:calc(11px * var(--s));
+  min-height:0;height:100%;justify-content:space-between}
+
+/* 区块标题：字重 + 上边线做层级，不靠缩小字号 */
+.blk-t{font-family:var(--cjk);font-weight:400;font-size:calc(16px * var(--s));
+  line-height:1.2;color:var(--ink);letter-spacing:.06em;
+  padding-bottom:calc(5px * var(--s));border-bottom:1px solid var(--line-2);
+  margin-bottom:calc(7px * var(--s));
+  display:flex;align-items:center;gap:calc(10px * var(--s))}
+.blk-t::before{content:'';width:calc(14px * var(--s));height:2px;
+  background:var(--accent);flex:0 0 auto}
+
+.blk-p{font-size:calc(14.5px * var(--s));line-height:1.66;color:var(--ink)}
+
+/* 教育经历：固定「学校 + 专业 + 时间」结构，竖线串成时间线 */
+/* 教育经历：真正的时间轴。
+   左列是时间跨度，中间是一条贯穿两段的时间线（节点是小方块，在读那段实心），
+   右列是学校 + 专业 + 说明。三列共用同一条基线 */
+.edu{list-style:none;display:flex;flex-direction:column;gap:calc(12px * var(--s));
+  position:relative}
+.edu-item{display:grid;
+  grid-template-columns:calc(104px * var(--s)) calc(16px * var(--s)) 1fr;
+  gap:calc(6px * var(--s)) calc(12px * var(--s));
+  align-items:start;position:relative}
+/* 时间段：像素字，等宽，两段年份在视觉上能对齐成一条 */
+.edu-y{font-family:var(--px);font-size:12px;letter-spacing:.04em;
+  color:var(--ink-2);line-height:1.5;white-space:nowrap;
+  padding-top:calc(2px * var(--s))}
+/* 节点 */
+.edu-node{position:relative;justify-self:center;
+  width:calc(9px * var(--s));height:calc(9px * var(--s));
+  margin-top:calc(7px * var(--s));background:#fff;
+  border:2px solid var(--ink-3);box-sizing:border-box}
+.edu-item.is-now .edu-node{background:var(--accent);border-color:var(--accent)}
+/* 时间线：从当前节点连到下一个节点；最后一项没有下段 */
+.edu-node::after{content:'';position:absolute;left:50%;top:100%;
+  width:2px;margin-left:-1px;background:var(--line-2);
+  height:calc(48px * var(--s))}
+.edu-item:last-child .edu-node::after{display:none}
+.edu-body{border-left:2px solid var(--line-2);padding-left:calc(14px * var(--s));
+  min-width:0}
+.edu-body b{font-weight:600;font-size:calc(15px * var(--s));color:var(--ink)}
+.edu-major{font-size:calc(14.5px * var(--s));color:var(--ink);
+  margin-left:calc(8px * var(--s))}
+.edu-body em{display:block;font-style:normal;
+  font-size:calc(13px * var(--s));line-height:1.62;color:var(--ink-2);
+  margin-top:calc(3px * var(--s))}
+
+/* 技能：真正的列表，类别名 + 值，用间隔号连词，不用大空格铺开 */
+.skill{display:flex;flex-direction:column;gap:calc(4px * var(--s))}
+.skill > div{display:grid;grid-template-columns:calc(96px * var(--s)) 1fr;
+  gap:calc(14px * var(--s));align-items:baseline}
+.skill dt{font-size:calc(13px * var(--s));line-height:1.6;color:var(--ink-3)}
+.skill dd{font-size:calc(14.5px * var(--s));line-height:1.6;color:var(--ink)}
+.skill dd span{color:var(--line-2);margin:0 calc(5px * var(--s))}
+
+/* 荣誉：等级用深色标记顶格，赛事名在后 */
+.awards{list-style:none;display:flex;flex-direction:column;gap:calc(3px * var(--s))}
+.awards li{font-size:calc(14px * var(--s));line-height:1.66;color:var(--ink);
+  display:grid;grid-template-columns:calc(86px * var(--s)) 1fr;
+  gap:calc(14px * var(--s));align-items:baseline}
+.awards li b{font-weight:600;color:var(--accent)}
+
+.cv-contact{display:flex;flex-wrap:wrap;gap:calc(8px * var(--s)) calc(34px * var(--s));
+  padding-top:calc(9px * var(--s));border-top:1px solid var(--line);
+  font-size:calc(13.5px * var(--s));line-height:1.6;color:var(--ink-2)}
+.cv-contact a{color:var(--ink);border-bottom:1px solid var(--line-2);
+  transition:border-color .15s,color .15s}
+.cv-contact a:hover{border-color:var(--accent);color:var(--accent)}
+
+/* 时间轴（01 经历屏）：四段各占四分之一高度，虚线落在每段底部——整栏是一条通栏的表，
+   不要在中间聚成一团，也不要用巨大的段间空白去撑高度。
+   信息分三层，写死在样式里，不要靠「·」把三件事串成一条字符串：
+     品牌名 15px/650 --ink · 职位 13px/400 --ink-2 · 时间 12px 右对齐 --ink-3
+   时间用 tabular-nums，四条必须落在同一垂直线上。 */
+.timeline{list-style:none;display:flex;flex-direction:column;
+  gap:calc(3px * var(--s));height:100%;justify-content:space-between;
+  max-height:none;margin:0;width:100%}
+.pane-tech{justify-content:center}
+/* 四段按内容高度自适应、再用 space-between 让整栏均匀铺满：
+   写 flex:1 1 0 时每段等分高度，第四段多一条要点就会被压实、末尾被裁掉。
+   padding 只留 6px：四段之间的呼吸靠 space-between 分出的间隙，
+   再叠 20px 上下内边距，四段正文就装不进 900 高的屏，末尾要被 overflow 裁掉。 */
+.timeline > li{display:grid;grid-template-columns:48px 1fr;gap:calc(18px * var(--s));
+  min-height:0;flex:0 0 auto;align-content:start;
+  padding:calc(4px * var(--s)) 0;border-bottom:1px dashed #D8DEE6}
+/* 最后一段的虚线是整栏的收口线，本身不再画线 */
+.timeline > li:last-child{border-bottom:none}
+/* 序号：与右侧品牌名首行垂直居中（不是与整块文字居中） */
+.timeline .ord{font-family:var(--px);font-size:11px;font-weight:700;letter-spacing:.06em;
+  color:var(--accent);line-height:1;justify-self:start;
+  margin-top:calc(5px * var(--s))}
+/* 四条经历的品牌色：红/橙/蓝/青绿拉开明度，避免两个红橙挨在一起像重复。
+   全部 >4.5:1（对 #EAF4FB），够做出 11px 的字。
+   n4 由原来的中性灰 #6E7480 改为青绿 #2E6E62——灰做成淡底胶囊会发脏，
+   而且跟"禁用"状态撞色；序号与胶囊必须同色才成一套 */
+.timeline .ord.n1{color:#A8202A}
+.timeline .ord.n2{color:#C0431F}
+.timeline .ord.n3{color:#2F4A94}
+.timeline .ord.n4{color:#2E6E62}
+
+/* 品牌色挂到每段上，胶囊通过 var(--c)/var(--cr) 自动取色。
+   用 :has(.ord.nX) 而不是 :nth-child(n)：颜色跟着序号类走，
+   以后四段顺序调整时颜色不会错配 */
+.timeline > li:has(.ord.n1){--c:#A8202A;--cr:168,32,42}
+.timeline > li:has(.ord.n2){--c:#C0431F;--cr:192,67,31}
+.timeline > li:has(.ord.n3){--c:#2F4A94;--cr:47,74,148}
+.timeline > li:has(.ord.n4){--c:#2E6E62;--cr:46,110,98}
+
+.tl-main{min-width:0;padding-left:calc(16px * var(--s));
+  border-left:1px solid var(--line-2);transition:border-color .18s}
+.timeline > li:hover .tl-main{border-left-color:var(--accent)}
+
+/* 第一行：品牌 + 职位胶囊在左，时间右对齐到内容区右缘。
+   center 而不是 baseline：基线对齐会让胶囊吊在品牌名上方 */
+.tl-top{display:flex;align-items:center;gap:calc(16px * var(--s))}
+/* 品牌名自己也是 flex 容器，胶囊是它的同级元素 */
+.tl-brand{flex:1 1 auto;min-width:0;
+  display:flex;align-items:center;gap:calc(10px * var(--s));
+  flex-wrap:wrap;row-gap:calc(5px * var(--s));
+  font-family:var(--cjk);font-size:calc(15px * var(--s));font-weight:700;line-height:1.4;
+  color:var(--ink);letter-spacing:.01em}
+/* 胶囊本身就是分隔，原来的间隔点去掉 */
+.tl-brand .sep{display:none}
+/* 职位：淡底胶囊徽章。品牌色由 :has(.ord.nX) 挂到 li 上的 --c/--cr 自动取色。
+   必须垫一层白底再叠 8.5% 品牌色——页面底是 #EAF4FB，宝洁蓝 #2F4A94 的 10%
+   叠在浅蓝上亮度几乎一样，胶囊边界会直接消失；垫白之后胶囊比背景亮，四个都立得住。
+   不用 color-mix()：兼容性更稳，导出 PDF 的工具链也不一定支持 */
+.tl-brand .tl-role{
+  display:inline-flex;align-items:center;gap:calc(6px * var(--s));
+  font-family:var(--serif);
+  font-size:calc(12.5px * var(--s));
+  font-weight:600;
+  line-height:1.2;
+  color:var(--c);
+  background-color:#fff;
+  background-image:linear-gradient(rgba(var(--cr),.085),rgba(var(--cr),.085));
+  border:1px solid rgba(var(--cr),.26);
+  padding:calc(3px * var(--s)) calc(10px * var(--s)) calc(3.5px * var(--s));
+  border-radius:999px;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  box-shadow:0 1px 1.5px rgba(33,44,62,.07);
+  transition:transform .2s ease}
+/* 胶囊左侧的小圆点，与文字同色 */
+.tl-brand .tl-role::before{
+  content:'';flex:0 0 auto;
+  width:calc(4px * var(--s));height:calc(4px * var(--s));
+  border-radius:50%;background:var(--c)}
+/* 悬停轻抬，只影响网页版，PDF 无感 */
+.timeline > li:hover .tl-brand .tl-role{transform:translateY(-1px)}
+.period{flex:0 0 auto;font-family:var(--px);font-size:12px;letter-spacing:.06em;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* 正文行宽按「字」算，不按像素猜。
+   思源宋体 13px 的单字宽约 12px，70 字 ≈ 840px。写死像素有两个毛病：
+   小屏字号变小后同一宽度塞得进更多字，且改字号时行宽不会跟着变。
+   所以用 em 挂在 li 上（em 取的是 li 自己的字号），三档视口都稳定在 70 字左右，
+   末尾再用 100% 兜住窄屏 */
+.bul{list-style:none;margin-top:calc(5px * var(--s))}
+.bul li{font-size:calc(13px * var(--s));line-height:1.66;color:var(--ink);
+  padding-left:calc(14px * var(--s));position:relative;
+  max-width:min(71em, 100%)}
+.bul li + li{margin-top:calc(4px * var(--s))}
+.bul li b{color:var(--ink);font-weight:700;margin-right:6px}
+.bul li b::after{content:'·';margin-left:6px;color:var(--line-2);font-weight:400}
+.bul li em{font-style:normal;color:var(--accent);font-weight:700}
+.bul li::before{content:'';position:absolute;left:0;top:calc(13px * var(--s) * .42);
+  width:4px;height:4px;background:var(--line-2)}
+
+/* ---------- 01 经历屏入场：只服务"从上往下扫"的节奏，不做装饰性动画 ----------
+   两条铁律：① 全部包在 no-preference 里；② 关掉动效后版式必须照样成立。
+   所以默认态就是最终态，动效只负责从「位移 + 透明」拉回来，绝不改尺寸与位置。 */
+@media (prefers-reduced-motion:no-preference){
+  /* 条目入场：24px 上移 + 淡入，300ms ease-out，四条错开 80ms，只播一次
+     （JS 加 .is-in 后 unobserve，翻回来不重播） */
+  #p1 .timeline > li{opacity:0;transform:translateY(24px);
+    transition:opacity .3s ease-out,transform .3s ease-out}
+  #p1 .timeline > li.is-in{opacity:1;transform:none}
+  #p1 .timeline > li:nth-child(2){transition-delay:.08s}
+  #p1 .timeline > li:nth-child(3){transition-delay:.16s}
+  #p1 .timeline > li:nth-child(4){transition-delay:.24s}
+
+  /* 左侧竖线生长：scaleY(0→1)，origin 在顶部，200ms */
+  #p1 .tl-main{border-left-color:transparent}
+  #p1 .timeline > li .tl-main::before{content:'';position:absolute;
+    left:calc(-16px * var(--s) - 1px);top:0;bottom:0;width:1px;
+    background:var(--line-2);transform:scaleY(0);transform-origin:top;
+    transition:transform .2s ease-out .1s}
+  #p1 .timeline > li.is-in .tl-main::before{transform:scaleY(1)}
+  #p1 .timeline > li .tl-main{position:relative}
+  #p1 .timeline > li:hover .tl-main::before{background:var(--accent)}
+
+  /* 正文高亮词 hover：底色从左向右扫过，默认态保持纯文字 */
+  #p1 .bul li b{position:relative;z-index:0}
+  #p1 .bul li b::before{content:'';position:absolute;inset:calc(-1px * var(--s)) -3px;
+    z-index:-1;background:rgba(158,80,48,.10);
+    transform-origin:left center;transform:scaleX(0);
+    transition:transform .28s ease-out}
+  #p1 .bul li b:hover::before{transform:scaleX(1)}
+}
+/* 减少动态：所有元素直接显示，版式与上面完全一致 */
+@media (prefers-reduced-motion:reduce){
+  #p1 .timeline > li{opacity:1;transform:none}
+}
+/* 兜底测量期间屏蔽位移：translateY 会把元素暂时推出容器，
+   让"装得下"被误判成溢出，进而把全站缩到下限 */
+.is-measuring #p1 .timeline > li,
+.is-measuring #p1 .timeline > li .tl-main::before{
+  transition:none !important;transform:none !important;opacity:1 !important}
+
+/* ================= KPI ================= */
+.kpi{display:flex;align-items:baseline;gap:8px 10px;flex-wrap:wrap;
+  margin-top:calc(14px * var(--s));padding-top:calc(13px * var(--s));
+  border-top:1px solid var(--line);width:100%}
+/* 左栏内容整体上移对齐，底部留白交给 grid */
+
+.kpi .big{font-family:var(--px);font-size:calc(26px * var(--s));line-height:1;
+  color:var(--accent);letter-spacing:.01em}
+.kpi .big small{font-size:.5em;margin-left:2px}
+.kpi .kt{font-size:calc(10px * var(--s));color:var(--ink-3);line-height:1.4;
+  margin-right:calc(18px * var(--s))}
+.kpi-3 .big{font-size:calc(22px * var(--s))}
+.kpi-4 .big{font-size:calc(20px * var(--s))}
+/* 四项指标并排时再压一档字号 + 收紧间距，避免最后一项被挤到第二行 */
+.kpi-4{gap:5px 7px;flex-wrap:nowrap}
+.kpi-4 .big{font-size:calc(18px * var(--s))}
+.kpi-4 .kt{font-size:calc(9px * var(--s));margin-right:calc(10px * var(--s));
+  white-space:nowrap}
+
+/* ================= 动手作 ================= */
+.acts{display:flex;flex-direction:column;gap:calc(10px * var(--s));margin-top:calc(16px * var(--s))}
+.act{display:grid;grid-template-columns:26px 1fr;gap:8px;
+  border-left:2px solid var(--line-2);padding-left:12px;cursor:pointer;
+  transition:border-color .18s}
+.act:hover,.act.on{border-left-color:var(--accent)}
+.act .n{font-family:var(--px);font-size:9px;color:var(--ink-3);padding-top:calc(4px * var(--s))}
+.act.on .n{color:var(--accent)}
+.act p{font-size:calc(11px * var(--s));line-height:1.85;color:var(--ink-2)}
+.act p b{color:var(--ink);font-weight:600;margin-right:6px}
+
+/* ================= 推文卡 ================= */
+/* 三张海报比例 0.720 / 0.462 / 0.459（1080×1500、1080×2338、800×1743）。
+   宽度按比例反算（43.9% / 28.1% / 28.0%），三张渲染出来等高，
+   图片 height:auto 完整显示，不留任何白边 */
+.tweets{display:flex;gap:12px;flex:1 1 auto;min-height:calc(200px * var(--s));
+  align-items:flex-start;margin:auto 0}
+.tw{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line-2);
+  padding:0;text-align:left;transition:transform .16s steps(2),border-color .16s;
+  min-width:0;flex:0 0 auto}
+.tw:nth-child(1){width:calc((100% - 24px) * .439)}
+.tw:nth-child(2){width:calc((100% - 24px) * .281)}
+.tw:nth-child(3){width:calc((100% - 24px) * .280)}
+.tw:hover{transform:translateY(-2px);border-color:var(--ink)}
+.tw img{width:100%;height:auto;background:#fff;border-bottom:1px solid var(--line);display:block}
+.tw-m{padding:9px 10px 11px;display:flex;flex-direction:column;gap:4px}
+.tw-m b{font-family:var(--cjk);font-size:calc(10px * var(--s));line-height:1.45;
+  font-weight:400;color:var(--ink)}
+.tw-m i{font-style:normal;font-size:calc(9px * var(--s));line-height:1.5;color:var(--ink-3)}
+
+/* ================= #p2 宝洁推文企划：排版放大（只动这一屏） =================
+   .lede 被 p2/p3/p4/p6/p7 共用，.act 被 p2/p6 共用——这里的规则一律带 #p2 前缀，
+   其它屏的字号保持原样。 */
+
+/* 段落小标签：中文像素字 + 右侧细线。
+   字体必须是 --cjk：--px 是 Silkscreen，只有拉丁字符，中文会掉到系统字体上又小又虚。
+   字号写死 12px 不乘 --s：像素字只能落在 12 的倍数上，乘缩放系数会出毛边 */
+#p2 .seg-h{font-family:var(--cjk);font-size:12px;letter-spacing:.1em;
+  color:var(--accent);line-height:1;margin-bottom:calc(13px * var(--s));
+  display:flex;align-items:center;gap:calc(10px * var(--s))}
+#p2 .seg-h::after{content:'';flex:1 1 auto;height:1px;background:rgba(158,80,48,.16)}
+
+/* 本页小字提到 11–12px，不再出现 8–9px 的脚注级字号。
+   .cap 同样换成 --cjk，并按像素字规则用 12px（11px 的中文像素字会并笔） */
+#p2 .cap{font-family:var(--cjk);font-size:12px;letter-spacing:.08em}
+#p2 .act .n{font-size:calc(11px * var(--s))}
+#p2 .kpi .kt{font-size:calc(12px * var(--s))}
+
+/* 导语 12.5→14，行距 1.92→1.75。
+   max-width 不设 56ch：那是「窄栏」，只有导语窄、动作条目通栏，右边缘会差出 155px，
+   两段读起来就不在一条线上。这里让两者都吃满栏宽，右边缘统一 */
+#p2 .lede{font-size:calc(14px * var(--s));line-height:1.8;max-width:none}
+
+/* 动作条目 11→13.5 */
+#p2 .act p{font-size:calc(13.5px * var(--s));line-height:1.8}
+#p2 .acts{gap:calc(16px * var(--s));margin-top:calc(13px * var(--s))}
+
+/* 左栏纵向：三段的留白要分摊，不能全堆在「任期成果」上面。
+   原来的做法是「前两段贴着排 + 成果 margin-top:auto」，结果成果上方空出 267px、
+   而第一二段之间只有 30px —— 一处大洞 + 一处贴死，所以看着不均衡。
+   现在改成 space-between：栏内多出的空间平均分到「段与段之间」，
+   每段的起始位置由栏高等分决定，上下都不再出现孤立的大留白。 */
+#p2 .split-l{justify-content:space-between;gap:0}
+#p2 .split-l > .seg:last-child{margin-top:0}
+/* 左栏的收口要对齐右栏卡组的底边（约 700），不要一直伸到栏底 808：
+   两边底边齐平，整屏才读成一个矩形块，而不是左高右低。
+   padding-bottom 用卡组与栏底的差值近似，窄屏由 space-between 自然吸收 */
+#p2 .split-l{padding-bottom:calc(108px * var(--s))}
+
+/* 成果区：去掉原上分隔线（会和 seg-h 的细线叠成双线）；
+   5000+ 与 8 同字号同色，分量对等。48 是 12 的倍数，像素字不出毛边 */
+#p2 .kpi{margin-top:0;padding-top:0;border-top:none;gap:6px 10px}
+#p2 .kpi .big,
+#p2 .kpi .big.sm{font-size:calc(48px * var(--s));color:var(--accent)}
+#p2 .fine{font-size:calc(12px * var(--s));line-height:1.7;margin-top:calc(10px * var(--s))}
+
+/* 卡片标题：像素字同样写死 12px；副标题 9→11px（全页最小字号的下限） */
+#p2 .tw-m b{font-size:12px;line-height:1.5}
+#p2 .tw-m i{font-size:calc(11px * var(--s))}
+
+/* 第三张卡标题改长后会折成 2–3 行，三张卡底边参差（900×700 下差 48px）。
+   让卡组按最高那张定高、三张等高拉齐，标题区吃掉多出的高度；
+   .tweets 不再 flex-grow，否则卡片会被拉到整栏高度 */
+#p2 .tweets{flex:0 0 auto;margin:0;align-items:stretch}
+#p2 .tw-m{flex:1 1 auto}
+/* 卡组不再撑满后，右栏默认的 center 会把整组往下推；本屏保持贴顶，与改动前位置一致 */
+#p2 .split-r{justify-content:flex-start}
+
+/* ================= #p3 Shopee 出图管线：字号与 #p2 对齐 =================
+   原来的问题是「一段大文言 + 三条小字流水线」，段落之间没有结构，
+   而流水线条目只有 11/10px、QC 标签 7.5px、按钮 8px，HR 基本读不清。
+   现在左栏按 背景与目标 → 解决方案 → 最终成果 三段切分，
+   字号整套照抄 #p2（导语 14 / 条目 13.5 / 小标签 12），只在这一屏生效 */
+
+#p3 .seg-h{font-family:var(--cjk);font-size:12px;letter-spacing:.1em;
+  color:var(--accent);line-height:1;margin-bottom:calc(13px * var(--s));
+  display:flex;align-items:center;gap:calc(10px * var(--s))}
+#p3 .seg-h::after{content:'';flex:1 1 auto;height:1px;background:rgba(158,80,48,.16)}
+#p3 .cap{font-family:var(--cjk);font-size:12px;letter-spacing:.08em}
+#p3 .lede{font-size:calc(14px * var(--s));line-height:1.8;max-width:none}
+/* 解决方案的引子句：比导语低一档，仍读得清，不与条目抢视线 */
+#p3 .seg-p{font-size:calc(13.5px * var(--s));line-height:1.8;color:var(--ink-2);margin-bottom:calc(2px * var(--s))}
+#p3 .act p{font-size:calc(13.5px * var(--s));line-height:1.8}
+#p3 .act .n{font-size:calc(11px * var(--s))}
+#p3 .acts{gap:calc(13px * var(--s));margin-top:calc(12px * var(--s))}
+
+/* 成果条目：不用 Ⅰ/Ⅱ 序号——序号在这里会被读成「第三步」，
+   改用砖红竖线 + 加粗小标题，与上面的动作条目同构但不同序号 */
+#p3 .res{display:flex;flex-direction:column;gap:calc(13px * var(--s));margin-top:calc(12px * var(--s))}
+#p3 .res > div{border-left:2px solid var(--accent);padding-left:calc(14px * var(--s))}
+#p3 .res p{font-size:calc(13.5px * var(--s));line-height:1.8;color:var(--ink-2)}
+#p3 .res b{color:var(--ink);font-weight:600;margin-right:6px}
+
+/* 三段在栏内均分留白，不再出现「导语贴顶、指标沉底、中间 200px 空洞」 */
+#p3 .split-l{justify-content:space-between;gap:calc(14px * var(--s))}
+/* 成果区的指标条与上方分隔线合并，避免和 seg-h 的细线叠成双线 */
+#p3 .kpi{margin-top:calc(8px * var(--s));padding-top:0;border-top:none;gap:6px 12px}
+#p3 .kpi .big{font-size:calc(30px * var(--s));color:var(--accent)}
+#p3 .kpi .kt{font-size:calc(12px * var(--s))}
+
+/* 右栏保持基线的 center：左栏是满高三段文字，右栏是一组「标题 + 四图 + 评分卡」，
+   两端撑开会把 2×87px 的空隙分给图组上下，读成两个断开的块；
+   居中时整组自成一个面板，收口按钮与图片同宽，视觉上仍然归拢 */
+
+/* QC 评分卡：7.5/10/9.5px 全部提到 12–13.5px。
+   .qh 换 --cjk —— Silkscreen 没有中文字形，中文会掉到系统字体上又小又虚。
+   整块改成纵向堆叠（关名 → 判定语 → 条目），不再用「左标签 / 右内容」两列：
+   12px 像素字不随 --s 缩放，窄屏下 88px 的列只够放三个字，
+   标签一旦溢出就会和右边的内容挤在一起，读成「硬伤纯黑块」。 */
+#p3 .qc{margin-top:calc(16px * var(--s))}
+#p3 .qc-grp + .qc-grp{margin-top:calc(13px * var(--s))}
+#p3 .qh{font-family:var(--cjk);font-size:12px;letter-spacing:.08em;
+  color:var(--scroll-ink);line-height:1.2;margin-bottom:calc(6px * var(--s));
+  display:flex;align-items:center;gap:calc(8px * var(--s))}
+/* 关名前压一道砖红短线，和左栏各段的小标题同一套视觉语法 */
+#p3 .qh::before{content:'';width:calc(12px * var(--s));height:2px;
+  background:var(--accent);flex:0 0 auto}
+#p3 .qv{font-size:calc(13.5px * var(--s));line-height:1.75;color:var(--ink-2);
+  display:block;text-wrap:pretty}
+#p3 .bars{display:flex;flex-direction:column;gap:calc(7px * var(--s));
+  margin-top:calc(8px * var(--s))}
+/* 判定语：比条目深一档，是这一段的主句 */
+#p3 .qv-lead{font-size:calc(13.5px * var(--s));line-height:1.75;color:var(--ink);
+  margin-bottom:calc(3px * var(--s))}
+#p3 .qv-lead b{font-weight:600;color:var(--accent);margin-right:2px}
+#p3 .bar-line{gap:calc(10px * var(--s))}
+#p3 .bar-line i{width:calc(64px * var(--s));height:7px}
+#p3 .bar-line em{font-size:calc(12.5px * var(--s))}
+
+/* 抽屉入口做成真按钮：原来是 8px 像素字 + 一条下划线，等于看不清也点不准 */
+#p3 .link-btn{font-family:var(--cjk);font-size:12px;letter-spacing:.06em;
+  display:inline-flex;align-items:center;gap:calc(9px * var(--s));align-self:flex-start;
+  padding:calc(8px * var(--s)) calc(14px * var(--s));
+  border:1px solid var(--accent);color:var(--accent);
+  margin-top:calc(14px * var(--s));transition:background .16s,color .16s}
+#p3 .link-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+#p3 .lb-arw{font-family:var(--px);font-size:10px;line-height:1}
+
+/* ================= 管线（已停用：p3 改为三段式，规则留档） ================= */
+.pipe{display:flex;flex-direction:column;gap:calc(9px * var(--s));margin-top:calc(14px * var(--s))}
+.step{display:grid;grid-template-columns:26px 1fr;gap:8px;border-left:2px solid var(--line-2);
+  padding-left:12px}
+.step .sn{font-family:var(--px);font-size:8px;color:var(--accent);padding-top:calc(4px * var(--s))}
+.step b{font-family:var(--cjk);font-size:calc(11px * var(--s));font-weight:400;color:var(--ink);
+  display:block;line-height:1.5}
+.step p{font-size:calc(10px * var(--s));line-height:1.8;color:var(--ink-2);margin-top:4px}
+
+/* KV 是 1380×391 的宽幅 banner（3.53:1）。两列两行，每格按比例定高，
+   四张一起完整显示，同时给下面的 QC 卡留出位置 */
+.kv4{display:grid;grid-template-columns:1fr 1fr;gap:7px;
+  flex:0 0 auto;min-height:0}
+.kv4 figure{border:1px solid var(--line-2);overflow:hidden;background:#fff;
+  aspect-ratio:1380/391;display:grid;place-items:center}
+.kv4 img{width:100%;height:100%;object-fit:contain}
+
+.qc{margin-top:calc(14px * var(--s))}
+.qc-row{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:calc(8px * var(--s)) 0;
+  border-bottom:1px solid var(--line)}
+.qh{font-family:var(--px);font-size:7.5px;letter-spacing:.1em;color:var(--scroll-ink);
+  text-transform:uppercase;line-height:1.7}
+.qv{font-size:calc(10px * var(--s));line-height:1.8;color:var(--ink-2);display:flex;
+  flex-direction:column;gap:5px}
+.bar-line{display:flex;align-items:center;gap:9px}
+.bar-line i{display:block;width:calc(76px * var(--s));height:6px;background:var(--line);
+  position:relative;flex:0 0 auto}
+.bar-line i::after{content:'';position:absolute;left:0;top:0;bottom:0;width:var(--w);
+  background:var(--scroll-ink)}
+.bar-line em{font-style:normal;font-size:calc(9.5px * var(--s));color:var(--ink-2)}
+.link-btn{font-family:var(--px);font-size:8px;letter-spacing:.1em;color:var(--accent);
+  margin-top:calc(10px * var(--s));border-bottom:1px solid var(--accent);padding-bottom:2px;
+  transition:color .15s,border-color .15s}
+.link-btn:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ================= 数据分析 ================= */
+.method{margin-top:calc(16px * var(--s));border-left:2px solid var(--accent);padding-left:14px}.method p{font-size:calc(11px * var(--s));line-height:1.88;color:var(--ink-2)}
+.method p b{color:var(--ink);font-weight:600}
+.shot{border:1px solid var(--line-2);background:#fff;overflow:hidden;
+  flex:1 1 auto;min-height:calc(190px * var(--s))}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:50% 4%}
+.callout{margin-top:calc(14px * var(--s));border-left:2px solid var(--scroll-ink);
+  padding-left:13px}
+.co-h{font-family:var(--px);font-size:8px;letter-spacing:.13em;color:var(--scroll-ink);
+  text-transform:uppercase}
+.callout p{font-size:calc(10.5px * var(--s));line-height:1.85;color:var(--ink-2);margin-top:7px}
+.callout p b{color:var(--ink);font-weight:600}
+.callout .cmp{margin-top:9px;color:var(--ink-3);font-size:calc(9.5px * var(--s))}
+/* 单张编码图：铺满整栏高度，两组数据用一条发丝线隔开 */
+.split-r > .scroll-card{height:100%;flex:1 1 auto}
+.split-r > .scroll-card .leaf{justify-content:space-between}
+.lgc.sep{border-top:1px solid rgba(120,90,50,.28);padding-top:calc(12px * var(--s))}
+/* 一张纸装三组数据：组内紧凑，组与组之间由 space-between 拉开 */
+.cgrp{display:flex;flex-direction:column}
+.cgrp + .cgrp{border-top:1px solid rgba(120,90,50,.28);padding-top:calc(11px * var(--s))}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin-top:calc(8px * var(--s))}
+.words span{display:inline-flex;align-items:baseline;gap:5px;
+  border:1px solid rgba(120,90,50,.4);padding:calc(4px * var(--s)) 8px;
+  font-family:var(--px);font-size:calc(8px * var(--s));letter-spacing:.03em;color:var(--ink)}
+.words em{font-style:normal;font-family:var(--serif);font-size:calc(9px * var(--s));
+  color:#8A6A44;letter-spacing:0}
+.scroll-card.compact .leaf .lgc{margin-top:calc(6px * var(--s))}
+.scroll-card.compact .co2{margin-top:calc(10px * var(--s))}
+/* 图下方的注脚沉到栏底，与左栏指标落在同一条基线上 */
+.split-r > .callout:last-child{margin-top:auto}
+.split-r > .scroll-card:last-child{margin-top:auto}
+
+/* 评论区原声 */
+.quotes{display:flex;flex-direction:column;gap:calc(11px * var(--s));flex:1 1 auto;
+  justify-content:center;margin-top:calc(16px * var(--s))}.q{border-left:2px solid var(--line-2);padding-left:12px}
+.q:hover{border-left-color:var(--accent)}
+.q .qi{font-size:calc(11px * var(--s));line-height:1.6;color:var(--ink)}
+.q .qi em{font-style:normal;font-family:var(--px);font-size:calc(8.5px * var(--s));
+  letter-spacing:.03em;color:var(--peak);margin-right:6px}
+.q .qm{font-size:calc(9.5px * var(--s));line-height:1.7;color:var(--ink-3);margin-top:4px}
+
+/* 编码口径四行 */
+.codebook{display:flex;flex-direction:column;gap:calc(8px * var(--s));
+  margin-top:calc(14px * var(--s))}
+.codebook > div{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:baseline;
+  border-bottom:1px solid var(--line);padding-bottom:calc(7px * var(--s))}
+.codebook dt{font-family:var(--px);font-size:7.5px;letter-spacing:.12em;color:var(--scroll-ink);
+  text-transform:uppercase;line-height:1.6}
+.codebook dd{font-size:calc(10.5px * var(--s));line-height:1.75;color:var(--ink-2)}
+
+/* 03-2 图表网格 */
+.data-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:calc(12px * var(--s)) calc(18px * var(--s));height:100%;min-height:0}
+.scroll-card{height:100%}
+.scroll-card .leaf{display:flex;flex-direction:column;justify-content:space-between}
+.verdict{height:100%}
+.scroll-card{display:grid;grid-template-columns:10px 1fr 10px;
+  filter:drop-shadow(0 1px 0 rgba(33,44,62,.10));min-height:0}
+.scroll-card .rod{background:var(--rod);position:relative}
+.scroll-card .rod::before{content:'';position:absolute;top:-4px;bottom:-4px;left:-1px;right:-1px;
+  background:var(--rod);border:1px solid var(--rod-d)}
+.scroll-card .rod::after{content:'';position:absolute;top:0;bottom:0;left:2px;width:2px;
+  background:rgba(255,255,255,.30)}
+.scroll-card .rod.l{border-right:1px solid var(--rod-d)}
+.scroll-card .rod.r{border-left:1px solid var(--rod-d)}
+.scroll-card .leaf{background:var(--scroll);border-top:1px solid var(--rod-d);
+  border-bottom:1px solid var(--rod-d);position:relative;
+  padding:calc(12px * var(--s)) 16px calc(11px * var(--s)) 15px;min-height:0}
+.scroll-card .leaf::before,.scroll-card .leaf::after{content:'';position:absolute;left:0;right:0;
+  height:2px;background:var(--scroll-edge)}
+.scroll-card .leaf::before{top:0}
+.scroll-card .leaf::after{bottom:0}
+.cap2{font-family:var(--px);font-size:8px;letter-spacing:.13em;color:var(--scroll-ink);
+  text-transform:uppercase;line-height:1}
+.ct{font-family:var(--cjk);font-size:calc(13px * var(--s));line-height:1.45;
+  margin-top:7px;color:var(--ink)}
+
+.grp{margin-top:calc(14px * var(--s))}
+.dense .grp{margin-top:calc(9px * var(--s))}
+.dense .row2{height:calc(19px * var(--s))}
+.dense .row2 .trk{height:calc(11px * var(--s))}
+.dense .co2{margin-top:calc(9px * var(--s))}
+.mid-justify{justify-content:center!important;gap:calc(10px * var(--s))}
+.gh{display:flex;align-items:baseline;gap:8px;font-family:var(--px);font-size:7.5px;
+  letter-spacing:.1em;color:var(--scroll-ink);margin-bottom:4px}
+.gh .gm{margin-left:auto;color:#96764F;letter-spacing:.05em}
+.row2{display:grid;grid-template-columns:30px 1fr 58px;align-items:center;gap:7px;height:calc(24px * var(--s))}
+.row2 .who{font-family:var(--px);font-size:7.5px;letter-spacing:.05em;color:var(--ink-2)}
+.row2 .trk{position:relative;height:calc(13px * var(--s));background:rgba(120,90,50,.13)}
+.row2 .trk i{position:absolute;left:0;top:0;bottom:0}
+.bmx{background:var(--accent)}
+.bkk{background:var(--ink-3)}
+.row2 .val{font-family:var(--px);font-size:7.5px;color:var(--ink);text-align:right}
+.row2.wide{grid-template-columns:58px 1fr 58px;height:calc(26px * var(--s))}
+.row2.wide .tick{position:absolute;top:-2px;bottom:-2px;width:1px;
+  background:rgba(120,90,50,.20);z-index:0}
+
+.stack{display:flex;height:calc(40px * var(--s));margin-top:calc(18px * var(--s));
+  border:1px solid var(--rod-d)}
+.stack > div{display:grid;place-items:center;font-family:var(--px);font-size:9px}
+.s-neg{background:var(--scroll-ink);color:var(--scroll-edge)}
+.s-neu{background:var(--mid);color:#4A3418}
+.s-pos{background:var(--moss);color:var(--scroll-edge)}
+.legend{display:flex;gap:14px;margin-top:calc(10px * var(--s));font-family:var(--px);font-size:7.5px;
+  letter-spacing:.07em;color:var(--scroll-ink)}
+.legend i{display:inline-block;width:8px;height:8px;margin-right:5px;vertical-align:-1px}
+.lgc{margin-top:calc(9px * var(--s))}
+.lax{position:relative;height:12px;margin-left:65px;margin-right:65px;margin-top:6px;
+  border-top:1px solid rgba(120,90,50,.35);font-family:var(--px);font-size:6.5px;
+  color:#8A6A44;white-space:nowrap}
+.lax span{position:absolute;top:3px;transform:translateX(-50%)}
+.lax span:last-child{transform:translateX(-88%)}
+.co2{font-size:calc(10.5px * var(--s));line-height:1.75;color:#6B5233;
+  margin-top:calc(14px * var(--s));border-left:2px solid var(--scroll-ink);padding-left:9px}
+.co2 b{color:var(--ink);font-weight:600}
+
+.verdict{border:1px solid var(--ink);padding:calc(13px * var(--s)) 16px;
+  display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.45)}
+.vd{font-family:var(--cjk);font-size:calc(19px * var(--s));line-height:1.55;color:var(--ink)}
+.vdx{font-size:calc(11.5px * var(--s));line-height:1.85;color:var(--ink-2);
+  margin-top:calc(8px * var(--s))}
+.vitems{display:flex;flex-direction:column;gap:8px;margin-top:calc(16px * var(--s))}
+.vitems > div{font-size:calc(10.5px * var(--s));line-height:1.7;color:var(--ink-2);
+  display:grid;grid-template-columns:22px 1fr;gap:5px}
+.vitems span{font-family:var(--px);font-size:7px;color:var(--accent);padding-top:2px}
+
+/* ================= 03 DATA 两屏：字号下限（D29） =================
+   第 7 屏（蜜雪·问题与编码）的局部字号原来是 7.5 / 8 / 9.5 / 10.5px，
+   在 1440 屏上基本读不出：编码口径的「采集/清洗/聚类/对照」、评论区原声、
+   卷轴纸上的 CODEBOOK / 标尺标签 / 数值列 / 高频词全都看不清。
+   这里把 03 节内部的小字抬到 12–13.5px，与 #p2 / #p3 已验收的档位一致。
+   ——中文标签一律换 --cjk：Silkscreen 没有中文字形，中文会掉到系统字体上又小又虚 */
+#p4 .cap2,
+#p5 .cap2{font-family:var(--cjk);font-size:12px;letter-spacing:.08em;text-transform:none}
+
+/* 分组抬头与标尺标签 */
+#p4 .gh,
+#p5 .gh{font-family:var(--cjk);font-size:12px;letter-spacing:.04em;margin-bottom:calc(5px * var(--s))}
+#p4 .gh .gm,
+#p5 .gh .gm{font-family:var(--cjk);font-size:12px;color:#8A6A44;letter-spacing:.02em}
+#p4 .lax,
+#p5 .lax{font-family:var(--cjk);font-size:12px}
+#p4 .legend,
+#p5 .legend{font-family:var(--cjk);font-size:12px}
+#p4 .stack > div,
+#p5 .stack > div{font-family:var(--cjk);font-size:12px}
+
+/* 条形行：左标签列必须按「4 个中文字 + 字距」给足，
+   12px 像素字不随 --s 缩放，写死像素列会在窄屏把「规则困惑」压成两行。
+   行高从 24 抬到 30，条本身也加粗一档 */
+#p4 .row2,
+#p5 .row2{grid-template-columns:minmax(56px,auto) 1fr 64px;
+  gap:calc(10px * var(--s));height:calc(30px * var(--s))}
+#p4 .row2.wide,
+#p5 .row2.wide{grid-template-columns:minmax(76px,auto) 1fr 64px;height:calc(30px * var(--s))}
+#p4 .row2 .who,
+#p5 .row2 .who{font-family:var(--cjk);font-size:12px;letter-spacing:.02em}
+#p4 .row2 .val,
+#p5 .row2 .val{font-family:var(--cjk);font-size:12px}
+#p4 .row2 .trk,
+#p5 .row2 .trk{height:calc(14px * var(--s))}
+/* 4 行一组时行高吃不下 30px，单独压到 24 */
+#p4 .row2:not(.wide){height:calc(24px * var(--s))}
+/* 右栏那张卷轴纸是三组数据叠一张，900×700 下内容比纸面高 32px、
+   末行会溢出到纸外。组距、图注上边距、词条上边距各收一档补回来 */
+#p4 .ct{margin-top:calc(4px * var(--s))}
+#p4 .co2{margin-top:calc(7px * var(--s))}
+#p4 .cgrp + .cgrp{padding-top:calc(7px * var(--s))}
+#p4 .words{margin-top:calc(5px * var(--s))}
+
+/* 图注段落 */
+#p4 .co2,
+#p5 .co2{font-size:calc(13.5px * var(--s));line-height:1.72}
+
+/* 高频词胶囊 */
+#p4 .words span{font-family:var(--cjk);font-size:12px;letter-spacing:.02em;
+  padding:calc(3px * var(--s)) calc(9px * var(--s))}
+#p4 .words em{font-size:calc(12px * var(--s))}
+
+/* ---- 第 7 屏左栏 ---- */
+#p4 .lede{font-size:calc(14px * var(--s));line-height:1.8;max-width:none}
+/* 编码口径：标签换中文像素字 12px，列宽同样按字数给足。
+   行距与下边距同时收紧——900×700 下这一屏是唯一顶到上限的屏，
+   多出的 21px 会触发全站 --s 兜底、把所有字号压小，宁可牺牲留白 */
+#p4 .codebook{gap:calc(6px * var(--s))}
+#p4 .codebook > div{grid-template-columns:minmax(56px,auto) 1fr;
+  padding-bottom:calc(5px * var(--s))}
+#p4 .codebook dt{font-family:var(--cjk);font-size:12px;letter-spacing:.08em;
+  text-transform:none;color:var(--scroll-ink)}
+#p4 .codebook dd{font-size:calc(13.5px * var(--s));line-height:1.72}
+/* 评论区原声：印尼语原文 8.5→12px（Silkscreen 拉丁字，12px 可读），
+   中文转述 11→13.5px，解释 9.5→12.5px 并从 --ink-3 提到 --ink-2 */
+#p4 .q .qi{font-size:calc(13.5px * var(--s));line-height:1.65}
+#p4 .q .qi em{font-size:12px;letter-spacing:.02em;margin-right:calc(8px * var(--s))}
+#p4 .q .qm{font-size:calc(12.5px * var(--s));line-height:1.7;color:var(--ink-2);
+  margin-top:calc(5px * var(--s))}
+#p4 .kpi .kt{font-size:calc(12px * var(--s))}
+/* 三段内容自然撑开后由 space-between 分配空档，不再让「原声」吃掉全部余量 */
+#p4 .quotes{flex:0 1 auto;justify-content:flex-start;gap:calc(12px * var(--s))}
+#p4 .split-l{justify-content:space-between}
+
+/* ---- 第 8 屏（洞察与结论）----
+   四张卡原来是 1fr 1fr 等分，字号一放大，第一张卡（三平台 × 两组）就装不下、
+   末行直接压到下一张卡上。改成上排略高、下排略矮：上排两组是信息最密的两张，
+   下排「对数轴」与「结论」本来就有余量。字号一格不动 */
+#p5 .data-grid{grid-template-rows:1.15fr .85fr}
+#p5 .dense .grp{margin-top:calc(4px * var(--s))}
+#p5 .dense .row2{height:calc(20px * var(--s))}
+#p5 .dense .row2 .trk{height:calc(11px * var(--s))}
+#p5 .dense .co2{margin-top:calc(5px * var(--s));line-height:1.6}
+#p5 .dense .ct{margin-top:calc(3px * var(--s))}
+#p5 .dense .gh{margin-bottom:0;line-height:1.1}
+#p5 .grp{margin-top:calc(8px * var(--s))}
+#p5 .gh{margin-bottom:calc(2px * var(--s))}
+#p5 .co2{margin-top:calc(7px * var(--s))}
+/* 情绪柱与图例也各收一档：这张卡比第一张矮 15px，收在这里比压字号划算 */
+#p5 .stack{height:calc(34px * var(--s))}
+#p5 .legend{margin-top:calc(6px * var(--s))}
+#p5 .mid-justify{gap:calc(6px * var(--s))!important}
+/* 结论卡：标题 19→24（像素字取 12 的倍数），正文与三条建议同步抬起 */
+#p5 .verdict .cap{font-family:var(--cjk);font-size:12px;letter-spacing:.08em}
+#p5 .vd{font-size:24px;line-height:1.5}
+#p5 .vdx{font-size:calc(13.5px * var(--s));line-height:1.8}
+#p5 .vitems > div{font-size:calc(13px * var(--s));line-height:1.6;
+  grid-template-columns:minmax(24px,auto) 1fr;gap:calc(8px * var(--s))}
+#p5 .vitems span{font-family:var(--cjk);font-size:12px;color:var(--accent)}
+
+
+/* ================= 04 BUSINESS 两屏：字号与三段式（D30） =================
+   第 9、10 屏（宝洁宣讲会 / 阳狮雀巢）是最早那版排版：导语 12.5px、动作条目 11px、
+   洞察条目 10–11px、`现场证据` / `线下落地` 标签 8px Silkscreen、复盘 10.5px，
+   而且左栏只有「导语 / 条目 / 指标」三块、块与块之间被 space-between 拉出大洞。
+   现在和 #p2 / #p3 统一：背景与目标 → 核心动作（三条洞察）→ 项目成果，字号 12–14px */
+#p6 .seg-h,
+#p7 .seg-h{font-family:var(--cjk);font-size:12px;letter-spacing:.1em;
+  color:var(--accent);line-height:1;margin-bottom:calc(13px * var(--s));
+  display:flex;align-items:center;gap:calc(10px * var(--s))}
+#p6 .seg-h::after,
+#p7 .seg-h::after{content:'';flex:1 1 auto;height:1px;background:rgba(158,80,48,.16)}
+
+#p6 .lede,
+#p7 .lede{font-size:calc(15px * var(--s));line-height:1.74;max-width:none}
+
+/* 三段之间均分空档；每段自带小标题与细线，空档读成章节节奏而不是空洞 */
+#p6 .split-l,
+#p7 .split-l{justify-content:space-between;gap:calc(16px * var(--s))}
+
+/* ---- 第 9 屏 ---- */
+#p6 .cap,
+#p7 .cap{font-family:var(--cjk);font-size:12px;letter-spacing:.08em}
+#p6 .act p{font-size:calc(15px * var(--s));line-height:1.85}
+#p6 .act .n{font-size:12px;padding-top:calc(5px * var(--s))}
+#p6 .acts{gap:calc(18px * var(--s));margin-top:0}
+/* 四项指标：4 列 × 2 行（上排数字、下排标签），列与列共用同一条基线。
+   直接 flex 排会让 12px 标签在数字右侧折行、拉出一百多像素的空档 */
+#p6 .kpi-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:auto auto;column-gap:calc(16px * var(--s));row-gap:calc(4px * var(--s));
+  align-items:baseline}
+#p6 .kpi-4 .big{font-size:calc(28px * var(--s));grid-row:1}
+#p6 .kpi-4 .kt{font-size:calc(13px * var(--s));grid-row:2;margin-right:0;
+  white-space:normal;line-height:1.45}
+
+/* ---- 第 10 屏：内容按「背景与目标 / 核心动作 / 实习产出」重写，
+   文字量从 260 字涨到 700 余字，因此左栏只放前两段、右栏在图下承接「实习产出」，
+   避免把整屏塞成一列密不透风的小字。字号定 13.5px（条目小标题 14px） */
+#p7 .ins .in{font-family:var(--cjk);font-size:12px;padding-top:calc(4px * var(--s))}
+#p7 .ins b{font-size:calc(14px * var(--s));line-height:1.42}
+#p7 .ins p{font-size:calc(13.5px * var(--s));line-height:1.72;margin-top:calc(3px * var(--s))}
+#p7 .insights{gap:calc(9px * var(--s));margin-top:0}
+/* 洞察清单：缩进一级、去掉列表符号，用「小节名 + 冒号式短语」开句 */
+#p7 .sub{list-style:none;display:flex;flex-direction:column;gap:calc(3px * var(--s));
+  margin-top:calc(4px * var(--s))}
+#p7 .sub li{font-size:calc(13.5px * var(--s));line-height:1.7;color:var(--ink-2);
+  position:relative;padding-left:calc(13px * var(--s))}
+#p7 .sub li::before{content:'';position:absolute;left:0;top:calc(9px * var(--s));
+  width:4px;height:4px;background:var(--scroll-ink);opacity:.55}
+#p7 .sub i{font-style:normal;font-weight:600;color:var(--ink);margin-right:4px}
+#p7 .sub em{font-style:normal;color:var(--accent);font-weight:600}
+
+/* 右栏：标签 + 2×2 拼格（三张现场图 + 一块「实习产出」）。
+   之前试过两种都不行：① 图按自身比例定高，整组只有 200px，剩余 200px 在
+   「图」与「实习产出」之间变成一条横向空带（用户连着指了三次）；
+   ② 让图组 flex:1 撑满，横构图会被裁掉一半以上，画面里的 banner 字全断。
+   改成 2×2 之后四个格子同宽同高、彼此填满，右栏没有可挖洞的余量，
+   图片只裁 15–25%（object-position 居中），文字也有独立一格 */
+#p7 .split-r{justify-content:flex-start;gap:calc(10px * var(--s))}
+#p7 .p7-grid{flex:1 1 auto;min-height:0;display:grid;
+  grid-template-columns:1fr 1fr;grid-template-rows:1fr auto;
+  gap:calc(9px * var(--s))}
+#p7 .p7-grid figure{margin:0;border:1px solid var(--line-2);overflow:hidden;
+  background:#fff;min-height:0}
+#p7 .p7-grid img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+/* 第四格是文字：浅白底 + 左侧砖红竖线，与三张照片同高，读成一块注释卡 */
+#p7 .p7-out{display:flex;flex-direction:column;justify-content:flex-start;
+  gap:calc(8px * var(--s));min-height:0;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.55);
+  padding:calc(9px * var(--s)) calc(11px * var(--s));overflow:hidden}
+#p7 .p7-out .seg-h{margin-bottom:calc(3px * var(--s));font-size:12px}
+#p7 .out-row{border-left:2px solid var(--scroll-ink);padding-left:calc(11px * var(--s))}
+#p7 .out-row b{display:block;font-family:var(--cjk);font-size:12px;font-weight:400;
+  letter-spacing:.06em;color:var(--scroll-ink);line-height:1.3;
+  margin-bottom:calc(2px * var(--s))}
+#p7 .out-row p{font-size:calc(13px * var(--s));line-height:1.64;color:var(--ink-2)}
+#p7 .out-row em{font-style:normal;color:var(--ink);font-weight:600}
+
+/* 左栏：两段贴顶排，但把余量交给「核心动作」的四条条目内部拉开
+   （.insights 撑满 + space-between），这样左栏也收到栏底，
+   与右栏 2×2 拼格同一条下沿；余量分成三份约 20px，读成正常的条目间距，
+   不会像贴着顶排那样在页脚上方留一条 60px 的横带 */
+#p7 .split-l{justify-content:flex-start;gap:calc(22px * var(--s))}
+#p7 .split-l > .seg:last-child{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+#p7 .insights{flex:1 1 auto;justify-content:space-between}
+
+/* ================= 商业能力 ================= */
+.evidence{border:1px solid var(--line-2);background:#fff;overflow:hidden;
+  flex:1 1 auto;min-height:calc(180px * var(--s))}
+.evidence img{width:100%;height:100%;object-fit:cover}
+/* 文档类素材是竖版长图，cover 会裁掉半页，改用完整显示 */
+.evidence.doc img{object-fit:contain;object-position:50% 0}
+.ev-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:9px}
+.ev{padding:0;border:1px solid var(--line-2);overflow:hidden;aspect-ratio:16/10;
+  opacity:.55;transition:opacity .18s,border-color .18s}
+.ev img{width:100%;height:100%;object-fit:contain;background:#fff}
+.ev:hover{opacity:.85}
+.ev.on{opacity:1;border-color:var(--accent)}
+
+.insights{display:flex;flex-direction:column;gap:calc(11px * var(--s));
+  margin-top:calc(16px * var(--s))}
+.ins{display:grid;grid-template-columns:26px 1fr;gap:8px;border-left:2px solid var(--line-2);
+  padding-left:12px;transition:border-color .18s}
+.ins:hover{border-left-color:var(--accent)}
+.ins .in{font-family:var(--px);font-size:10px;color:var(--accent);padding-top:calc(3px * var(--s))}
+.ins b{font-family:var(--cjk);font-size:calc(11px * var(--s));font-weight:400;
+  color:var(--ink);display:block;line-height:1.5}
+.ins p{font-size:calc(10px * var(--s));line-height:1.8;color:var(--ink-2);margin-top:4px}
+.ins em{font-style:normal;color:var(--accent);font-weight:600}
+
+/* 户外三张：横(1.334) 竖(0.75) 横(1.334)。统一给一个高度，宽度由图片自身比例决定，
+   三张就自然等高；三个宽度加起来约等于栏宽，正好铺满不留大缝 */
+.ooh{display:flex;gap:8px;flex:0 1 auto;min-height:0;
+  align-items:center;justify-content:center}
+/* 三张总宽 = 高 × (1.334 + 0.75 + 1.334) = 高 × 3.418，再加 16px 间距。
+   用容器宽度反算高度，(100% - 16px) / 3.418 让三张正好铺满栏宽、不越界 */
+.ooh figure{border:1px solid var(--line-2);overflow:hidden;background:#fff;
+  min-width:0;flex:0 0 auto;height:calc(((100vw - 112px) * .51 - 24px) / 3.418);
+  max-height:calc(320px * var(--s));
+  display:flex;align-items:center;justify-content:center}
+.ooh img{height:100%;width:auto;display:block}
+
+/* ================= 致谢 ================= */
+.pane.thanks{justify-content:center;align-items:center}
+.thanks-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:calc(14px * var(--s))}
+.eyebrow.center{justify-content:center}
+.thanks-h{font-size:calc(44px * var(--s))}
+.thanks-p{font-size:calc(15px * var(--s));color:var(--ink-2);line-height:1.8}
+.contacts{display:grid;grid-template-columns:repeat(3,auto);gap:12px;
+  margin-top:calc(14px * var(--s))}
+.contacts a{border:1px solid var(--line-2);padding:calc(11px * var(--s)) calc(18px * var(--s));
+  display:flex;flex-direction:column;gap:5px;min-width:calc(150px * var(--s));
+  transition:border-color .18s,background .18s}
+.contacts a:hover{border-color:var(--ink);background:rgba(255,255,255,.5)}
+.contacts .cl{font-family:var(--cjk);font-size:12px;letter-spacing:.06em;color:var(--ink-3);
+  text-transform:uppercase}
+.contacts .cv2{font-size:calc(15px * var(--s));color:var(--ink)}
+.contacts .cv-btn{border-color:var(--accent)}
+.contacts .cv-btn .cv2{color:var(--accent)}
+.sign{font-size:calc(14px * var(--s));color:var(--ink-2);line-height:1.7;
+  margin-top:calc(10px * var(--s))}
+
+/* ================= 抽屉 ================= */
+.scrim{position:fixed;inset:60px 0 40px 0;background:rgba(33,44,62,.16);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .22s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:60px;right:0;bottom:40px;width:min(600px,45vw);z-index:71;
+  background:#FBF7EF;border-left:1px solid var(--ink);
+  transform:translateX(100%);transition:transform .30s var(--ease);
+  display:flex;flex-direction:column;padding:22px 26px 18px;overflow:hidden}
+.drawer.on{transform:translateX(0)}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  border-bottom:1px solid var(--rod);padding-bottom:11px}
+.dno{font-family:var(--px);font-size:calc(10px * var(--s));color:var(--scroll-ink);letter-spacing:.14em}
+.dt{font-family:var(--cjk);font-size:calc(13.5px * var(--s));line-height:1.5;margin-top:6px}
+.dx{font-family:var(--px);font-size:13px;color:var(--scroll-ink);padding:2px 5px;
+  transition:background .15s,color .15s}
+.dx:hover{background:var(--scroll-ink);color:#FBF7EF}
+.dbody{margin-top:14px;flex:1 1 auto;min-height:0;
+  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:calc(11px * var(--s));
+  padding-right:6px}
+/* 滚动条做成一条细航线，不抢内容 */
+.dbody::-webkit-scrollbar{width:5px}
+.dbody::-webkit-scrollbar-track{background:rgba(120,90,50,.09)}
+.dbody::-webkit-scrollbar-thumb{background:var(--rod)}
+.dbody{scrollbar-width:thin;scrollbar-color:var(--rod) rgba(120,90,50,.09)}
+.block{border-left:2px solid #E0D2BC;padding-left:12px}
+.block.hi{border-left-color:var(--scroll-ink)}
+/* 抽屉小标题是中文（画面/文案/为什么这么写），用 --px 会掉到系统字体上；
+   换 --cjk 并按像素字规则用 12px */
+.block .h{font-family:var(--cjk);font-size:12px;letter-spacing:.14em;color:#9A8467;line-height:1}
+.block.hi .h{color:var(--scroll-ink)}
+.block p{font-size:calc(14px * var(--s));line-height:1.72;color:var(--ink-2);margin-top:calc(7px * var(--s))}
+.block p b{color:var(--ink);font-weight:600}
+.dbody img{max-width:100%;border:1px solid var(--line-2)}
+.dbody pre{font-family:ui-monospace,Consolas,monospace;font-size:calc(11px * var(--s));
+  line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink-2);
+  background:#fff;border:1px solid var(--line);padding:11px;max-height:100%;overflow:hidden}
+
+/* ================= 进度 ================= */
+.progress{position:fixed;left:0;right:0;bottom:0;height:40px;z-index:60;
+  display:flex;align-items:center;gap:16px;padding:0 40px;background:var(--water);
+  border-top:1px solid var(--line)}
+.p-label{font-family:var(--px);font-size:9px;letter-spacing:.14em;color:var(--ink-3)}
+.p-line{flex:1;height:1px;background:var(--line-2);position:relative}
+.p-seg{position:absolute;top:-1px;height:3px;left:0;width:0;background:var(--accent);
+  transition:width var(--dur) var(--ease)}
+.p-boat{position:absolute;top:-8px;left:0;width:13px;height:9px;background:var(--accent);
+  clip-path:polygon(0 55%,100% 55%,86% 100%,14% 100%);
+  transition:left var(--dur) var(--ease)}
+.p-dots{display:flex;gap:6px}
+.p-dot{width:7px;height:7px;background:var(--line-2);transition:background .15s}
+.p-dot:hover{background:var(--ink-3)}
+.p-dot.on{background:var(--accent)}
+.p-arrows{display:flex;gap:6px}
+.arrow{width:26px;height:26px;border:1px solid var(--line-2);background:#fff;
+  display:grid;place-items:center;font-family:var(--px);font-size:9px;
+  transition:border-color .15s,background .15s,color .15s}
+.arrow:hover{border-color:var(--ink);background:var(--ink);color:var(--water)}
+.arrow:disabled{opacity:.28;cursor:default}
+.arrow:disabled:hover{border-color:var(--line-2);background:#fff;color:var(--ink)}
+
+/* ================= 小屏 ================= */
+@media (max-width:1280px){
+  .pane{padding-left:40px;padding-right:40px}
+  .about-grid,.split{gap:32px}
+}
+@media (max-width:1080px){
+  .brand .en{display:none}
+  .split{grid-template-columns:1fr 1fr;gap:26px}
+  .about-grid{grid-template-columns:1fr 1fr;gap:26px}
+  .fields{grid-template-columns:1fr}
+  .tl-t .period{margin-left:0;width:100%}
+}
+@media (max-width:860px){
+  .nav{grid-template-columns:auto 1fr auto;padding:0 18px;gap:10px;height:52px}
+  .brand .cn{font-size:18px}
+  .tabs{overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-size:11.5px;padding:7px 9px}
+  .btn{padding:6px 10px;font-size:10.5px}
+  .btn span{display:none}
+  .viewport{inset:52px 0 0 0}
+  .pane{padding:18px 20px 34px}
+  .split,.about-grid{grid-template-columns:1fr;gap:16px}
+  .split-r{display:none}
+  .data-grid{grid-template-columns:1fr}
+  .progress{height:34px;padding:0 14px;gap:10px}
+  .p-dots{display:none}
+  .thanks-h{font-size:calc(30px * var(--s))}
+  .contacts{grid-template-columns:1fr}
+  .drawer{width:100vw}
+  /* 窄屏：封面文字收小、小生物与项目瓶隐去，避免挡住标题 */
+  .cover-h{font-size:calc(36px * var(--s));line-height:1.2}
+  .cover-sub{font-size:calc(15px * var(--s))}
+  .cover-note{font-size:calc(14px * var(--s));line-height:1.6}
+  .cover-copy{top:calc(48px * var(--s));padding:0 20px}
+  .sea-turtle,.sea-pearl,.sea-conch{display:none}
+  .pane-bottle{display:none}
+}

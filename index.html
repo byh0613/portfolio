@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>邴元昊 · 品牌策划与 GTM 作品集</title>
+<meta name="description" content="武汉大学市场营销 2026 届 · 北京大学汇丰商学院财经传媒 2026 级在读。品牌策划 / GTM 方向作品集。">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="water-texture"></div>
+<div class="edges"></div>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav">
+  <a class="brand" href="#about" data-go="0">
+    <span class="cn">邴元昊</span><span class="en">BING YUANHAO</span>
+  </a>
+  <div class="tabs" id="tabs">
+    <button class="tab" data-sec="2" aria-selected="false">关于我</button>
+    <button class="tab" data-sec="4" aria-selected="false">内容与设计</button>
+    <button class="tab" data-sec="6" aria-selected="false">数据分析</button>
+    <button class="tab" data-sec="8" aria-selected="false">商业能力</button>
+    <button class="tab" data-sec="10" aria-selected="false">致谢</button>
+  </div>
+  <div class="nav-right">
+    <a class="btn" href="assets/cv.pdf" download target="_blank" rel="noopener">下载简历 PDF <i>↓</i></a>
+  </div>
+</nav>
+
+<!-- ============ 舞台 ============ -->
+<main class="viewport">
+<div class="track" id="track">
+
+  <!-- ─────────── 00 · COVER ─────────── -->
+  <section class="pane cover" id="cover" data-label="封面" data-sec="-1">
+    <div class="cover-sea" id="coverSea" aria-hidden="true">
+      <img class="sea-turtle" src="assets/img/sea/turtle.png" alt="">
+      <img class="sea-pearl" src="assets/img/sea/pearl.png" alt="">
+      <img class="sea-conch" src="assets/img/sea/conch.png" alt="">
+    </div>
+    <div class="cover-drop" id="coverDrop" aria-hidden="true"></div>
+    <div class="cover-copy">
+      <div class="cover-eyebrow">PORTFOLIO · 2026</div>
+      <h1 class="cover-h">邴元昊个人作品集</h1>
+      <p class="cover-sub">沙滩上捡到漂流瓶~</p>
+      <p class="cover-note">品牌策划 / GTM · 武汉大学市场营销 2026 届 · 北京大学汇丰商学院财经传媒 2026 级在读</p>
+    </div>
+    <button class="cover-enter" id="coverEnter">启航 <i>→</i></button>
+    <p class="cover-hint">鼠标划过海面，会有漂流瓶落下</p>
+  </section>
+
+  <!-- ─────────── 目录 · CONTENTS ─────────── -->
+  <section class="pane toc" id="toc" data-label="目录" data-sec="-1">
+    <header class="head">
+      <div class="eyebrow"><span class="num">00</span><span class="dash"></span><span>Contents / 四只瓶</span></div>
+      <h1 class="h1">沙滩上捡到四只漂流瓶<span class="en">FOUR BOTTLES ASHORE</span></h1>
+      <p class="toc-lede">每一只瓶里都塞着一卷关于我的纸条。捡起哪只，就先看哪一部分。</p>
+    </header>
+    <div class="body">
+      <div class="toc-grid">
+        <!-- 每列一张 svg：瓶与弧线共用坐标系，所以字永远不会压到瓶身。
+             弧线为二次贝塞尔，顶点 y = 0.25·y₀ + 0.5·yc + 0.25·y₁。
+             画布 300×400 已按内容收紧，上下留 ≤14px，改坐标必须重算顶点 -->
+        <button class="toc-item toc-a" data-goto="2" aria-label="进入 关于我">
+          <svg class="toc-fig" viewBox="0 0 300 440" aria-hidden="true">
+            <defs><path id="arcA" d="M 60 126 Q 150 108 240 126"/></defs>
+            <text class="toc-no" x="150" y="40" text-anchor="middle">01</text>
+            <g class="toc-bob"><image href="assets/img/bottles/violet.png" x="80" y="134" width="140" height="257"/></g>
+            <text class="toc-t"><textPath href="#arcA" startOffset="50%" text-anchor="middle">关于我</textPath></text>
+          </svg>
+        </button>
+
+        <button class="toc-item toc-b" data-goto="4" aria-label="进入 内容创作与设计">
+          <svg class="toc-fig" viewBox="0 0 300 440" aria-hidden="true">
+            <defs><path id="arcB" d="M -30 312 Q 150 354 330 312"/></defs>
+            <g class="toc-bob"><image href="assets/img/bottles/star.png" x="76" y="38" width="148" height="255"/></g>
+            <text class="toc-t"><textPath href="#arcB" startOffset="50%" text-anchor="middle">内容创作与设计</textPath></text>
+            <text class="toc-no" x="150" y="406" text-anchor="middle">02</text>
+          </svg>
+        </button>
+
+        <button class="toc-item toc-c" data-goto="6" aria-label="进入 数据分析">
+          <svg class="toc-fig" viewBox="0 0 300 440" aria-hidden="true">
+            <defs><path id="arcC" d="M 40 146 Q 150 128 260 146"/></defs>
+            <text class="toc-no" x="150" y="58" text-anchor="middle">03</text>
+            <g class="toc-bob"><image href="assets/img/bottles/flower.png" x="72.5" y="154" width="155" height="238"/></g>
+            <text class="toc-t"><textPath href="#arcC" startOffset="50%" text-anchor="middle">数据分析</textPath></text>
+          </svg>
+        </button>
+
+        <button class="toc-item toc-d" data-goto="8" aria-label="进入 商业能力">
+          <svg class="toc-fig" viewBox="0 0 300 440" aria-hidden="true">
+            <defs><path id="arcD" d="M 46 330 Q 150 362 254 330"/></defs>
+            <g class="toc-bob"><image href="assets/img/bottles/heart.png" x="85" y="39" width="130" height="244"/></g>
+            <text class="toc-t"><textPath href="#arcD" startOffset="50%" text-anchor="middle">商业能力</textPath></text>
+            <text class="toc-no" x="150" y="410" text-anchor="middle">04</text>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">00 — CONTENTS</span><span class="r">点任意一只瓶进入<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 01 · ABOUT 1 ─────────── -->
+  <section class="pane" id="p0" data-label="关于我 · 档案">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/violet.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">01</span><span class="dash"></span><span>ABOUT ME / 档案与技能</span></div>
+            <h1 class="h1">关于我<span class="en">PROFILE</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="body">
+      <div class="cv">
+
+        <!-- 左栏 1/3：工牌。点击翻面看座右铭 -->
+        <aside class="cv-side">
+          <div class="lanyard" id="lanyard">
+            <span class="ly-strap" aria-hidden="true"></span>
+            <span class="ly-clip" aria-hidden="true"></span>
+            <span class="ly-swing">
+            <button class="ly-card" id="lyCard" type="button"
+                    aria-label="翻转工牌，查看座右铭">
+              <span class="ly-face ly-front">
+                <img src="assets/img/portrait/card-front.jpg" alt="邴元昊">
+                <span class="ly-tag">
+                  <b>邴元昊</b>
+                  <i>BING YUANHAO</i>
+                </span>
+              </span>
+              <span class="ly-face ly-back">
+                <span class="ly-motto">心之所向<br>素履以往</span>
+                <span class="ly-sig">邴元昊 · 品牌策划 / GTM</span>
+              </span>
+            </button>
+            </span>
+          </div>
+          <p class="ly-hint">点击工牌翻面</p>
+        </aside>
+
+        <!-- 右栏 2/3：四个区块，标题贴合同一条栏线 -->
+        <div class="cv-main">
+
+          <section class="blk">
+            <h2 class="blk-t">个人简介</h2>
+            <p class="blk-p">英语听说读写能力良好，擅长活动策划和数据分析，能够独立完成从调研到落地的全流程。能用 Figma 完成基础界面设计与原型制作，熟练使用剪映进行视频剪辑和后期处理。</p>
+          </section>
+
+          <section class="blk">
+            <h2 class="blk-t">教育经历</h2>
+            <ol class="edu">
+              <li class="edu-item">
+                <span class="edu-y">2022 — 2026</span>
+                <span class="edu-node" aria-hidden="true"></span>
+                <span class="edu-body">
+                  <b>武汉大学</b><span class="edu-major">市场营销</span>
+                  <em>专业排名 1/23 · 绩点 3.93 / 4.00 · 雅思 7.5</em>
+                </span>
+              </li>
+              <li class="edu-item is-now">
+                <span class="edu-y">2026 — 至今</span>
+                <span class="edu-node" aria-hidden="true"></span>
+                <span class="edu-body">
+                  <b>北京大学汇丰商学院</b><span class="edu-major">财经传媒</span>
+                  <em>在读</em>
+                </span>
+              </li>
+            </ol>
+          </section>
+
+          <section class="blk">
+            <h2 class="blk-t">专业技能</h2>
+            <dl class="skill">
+              <div><dt>数据分析</dt><dd>SPSS<span>·</span>R<span>·</span>Nvivo<span>·</span>八爪鱼</dd></div>
+              <div><dt>AI 工具</dt><dd>Cursor（Vibecoding）<span>·</span>Codex<span>·</span>Midjourney</dd></div>
+              <div><dt>设计与剪辑</dt><dd>Figma<span>·</span>剪映</dd></div>
+            </dl>
+          </section>
+
+          <section class="blk">
+            <h2 class="blk-t">荣誉奖项</h2>
+            <ul class="awards">
+              <li><b>全国一等奖</b>商业精英挑战赛 · 品牌策划赛道</li>
+              <li><b>省二等奖</b>正大杯 市场调查与分析大赛</li>
+              <li><b>一等奖</b>湖北省营销大赛</li>
+              <li><b>奖学金</b>市场营销专业甘碧群奖学金 · 优秀学生乙等奖学金 ×2</li>
+            </ul>
+          </section>
+
+          <p class="cv-contact">
+            <span>电话 / 微信　<a href="tel:13181185698">131 8118 5698</a></span>
+            <span>邮箱　<a href="mailto:13181185698@163.com">13181185698@163.com</a></span>
+          </p>
+
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">01 — ABOUT</span><span class="r">下一屏 · 实习经历<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 01 · ABOUT 2 ─────────── -->
+  <section class="pane" id="p1" data-label="关于我 · 经历">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/sprout.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">01</span><span class="dash"></span><span>ABOUT ME / 过往履历</span></div>
+            <h1 class="h1">经历与项目<span class="en">EXPERIENCE</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <ol class="timeline">
+        <li>
+          <span class="ord n2">1ST</span>
+          <div class="tl-main">
+            <div class="tl-top">
+              <h3 class="tl-brand">Shopee<span class="sep">·</span><span class="tl-role">产品经理 · Marketplace Buyer &amp; Marketing</span></h3>
+              <span class="period">2025.11 — 2026.03</span>
+            </div>
+            <ul class="bul">
+              <li><b>搭建 AI Agent 工作流</b>设计结构化 Prompt 模板，把营销主题、地区等变量标准化，驱动 Gemini 自动生成绘图参数。产出 100 多张主视觉 banner，经多轮 QC 提炼出 10 多项视觉要素，大促素材生产效率提升 <em>45%</em>。</li>
+              <li><b>用户测试与功能上线</b>对接国内及泰国、越南等 10 余国运营和设计团队，通过访谈与 UAT 测试（拆解 5 大功能、16 个子功能）收集反馈。用流程图和原型图细化业务逻辑，通过需求评审并进入开发。</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="ord n1">2ND</span>
+          <div class="tl-main">
+            <div class="tl-top">
+              <h3 class="tl-brand">阳狮传媒 Publicis Media<span class="sep">·</span><span class="tl-role">媒介策划</span></h3>
+              <span class="period">2024.07 — 2024.09</span>
+            </div>
+            <ul class="bul">
+              <li><b>媒介策略制定</b>根据雀巢品牌营销策略，覆盖短视频、社交媒体等多渠道，做了 5 版投放方案，对比分析伊利欣活等 50 余个竞品。最终确定线上长视频平台开屏广告 + 线下武汉 2 号线广告的组合方案。</li>
+              <li><b>投放评估与媒体合作</b>用 Admonitor、CTRAdCube 爬取 100 余家卫视和户外广告投放数据，完成 <em>20 余次</em>评估并提优化建议；与芒果等 10 余家视频媒体洽谈资源。</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="ord n3">3RD</span>
+          <div class="tl-main">
+            <div class="tl-top">
+              <h3 class="tl-brand">宝洁中国校园品牌俱乐部<span class="sep">·</span><span class="tl-role">活动策划部部长</span></h3>
+              <span class="period">2023.07 — 2025.06</span>
+            </div>
+            <ul class="bul">
+              <li><b>春秋招活动统筹</b>统筹面向华中高校的春、秋招分享会，在线峰值突破 <em>1000+</em>，平均到场 150+，累计点赞 1.2w+，团队考核跻身全国 top5（4/31）。</li>
+              <li><b>活动策划 + KOL 合作</b>独立策划 10+ 场特色活动（「万圣夜计划」「围炉夜话」），均入选总部 goldencase；主动联系 50+ 位万级粉丝校园博主，合作达成率 25%。</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="ord n4">4TH</span>
+          <div class="tl-main">
+            <div class="tl-top">
+              <h3 class="tl-brand">独立研究｜蜜雪冰城东南亚出海诊断<span class="sep">·</span><span class="tl-role">自驱项目</span></h3>
+              <span class="period">2026.10 — 2026.11</span>
+            </div>
+            <ul class="bul bul-3">
+              <li><b>课题来源</b>注意到蜜雪在印尼门店高速扩张、但内容侧声量不匹配，自设课题验证「内容供给与本地用户期待错位」这一假设。</li>
+              <li><b>方法与数据</b>用 Playwright 抓取印尼区 TikTok / YouTube 内容与 97 条评论（清洗后 <em>73</em> 条有效），建立互动率 × 评论情感二维对照，同期采集竞品 KK 数据横比。</li>
+              <li><b>结论与产出</b>定位到「爆款依赖联名、日常内容履约信息缺失」两大缺口，聚类发现福利帖消极占比 <em>33%</em>、核心痛点是履约断裂，据此输出 6 条可执行选题方案与一份内容日历草案。</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+    <footer class="foot"><span class="l">01 — ABOUT</span><span class="r">下一节 · 内容与设计<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 02 · CONTENT 1 ─────────── -->
+  <section class="pane" id="p2" data-label="内容与设计 · 推文">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/star.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">02</span><span class="dash"></span><span>Content / 文案</span></div>
+            <h1 class="h1">宝洁推文企划<span class="en">COPYWRITING</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="split">
+        <div class="split-l">
+          <div class="seg">
+            <div class="seg-h">背景与目标</div>
+            <p class="lede">针对宝洁雇主品牌在目标院校曝光不足、校招季信息触达率低的问题，承担校园公众号推广文案主笔，目标是拉高品牌好感度，并把读者导进校招社群。</p>
+          </div>
+          <div class="seg">
+            <div class="seg-h">核心动作</div>
+            <div class="acts">
+              <div class="act"><span class="n">Ⅰ</span><p>深度拆解校招痛点与求职焦虑，把音乐节、分享会等线下环节转化为线上叙事，增强内容的共情力与传播性。</p></div>
+              <div class="act"><span class="n">Ⅱ</span><p>设计推文内容与社群抽奖、干货分享的交互节点，打通「公域种草 → 私域沉淀 → 招聘转化」的闭环。</p></div>
+            </div>
+          </div>
+          <div class="seg">
+            <div class="seg-h">任期成果</div>
+            <div class="kpi">
+              <span class="big">5000<small>+</small></span><span class="kt">累计阅读量</span>
+              <span class="big">8<small>篇</small></span><span class="kt">独立策划产出</span>
+            </div>
+            <p class="fine">有效提升校招活动在校内的曝光量与参与度。</p>
+          </div>
+        </div>
+        <div class="split-r">
+          <div class="cap">三篇代表作 · 点开看原文</div>
+          <div class="tweets">
+            <button class="tw" data-detail="tw1">
+              <img src="assets/img/tweet/pg-christmas.jpg" alt="圣诞晚宴推文">
+              <span class="tw-m"><b>共赴啤小鸡的圣诞晚宴</b><i>绿色满版 · 手绘 IP · 长句右对齐</i></span>
+            </button>
+            <button class="tw" data-detail="tw2">
+              <img src="assets/img/tweet/pg-halloween.jpg" alt="万圣新闻推文">
+              <span class="tw-m"><b>PGC 万圣新闻</b><i>黑金聚光灯 · 巫师造型 · 斜切色块</i></span>
+            </button>
+            <button class="tw" data-detail="tw3">
+              <img src="assets/img/tweet/pg-spring.png" alt="春招焦虑推文">
+              <span class="tw-m"><b>“人随春好，春与人宜”春招分享会活动</b><i>米白底 · 痛点气泡 · 诗意收束</i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">02 — CONTENT</span><span class="r">下一屏 · Shopee 出图管线<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 02 · CONTENT 2 ─────────── -->
+  <section class="pane" id="p3" data-label="内容与设计 · Shopee">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/coin.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">02</span><span class="dash"></span><span>Content / 视觉工作流</span></div>
+            <h1 class="h1">让 AI 出图变得可控<span class="en">CREATIVE WORKFLOW</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="split">
+        <div class="split-l">
+          <div class="seg">
+            <div class="seg-h">背景与目标</div>
+            <p class="lede">Shopee 大促期间，运营 Banner 需求飙升至平日的三倍，且需适配多国主题。设计团队面临产能瓶颈与出品质量参差不齐的双重难题。作为 Creative Asset PM，我的核心目标是利用 AI 将出图流程结构化，以节省工时、保证每一张生成图都能直接交付业务投放。</p>
+          </div>
+          <div class="seg">
+            <div class="seg-h">解决方案</div>
+            <p class="seg-p">为解决 AI 初稿合格率低的痛点，我没有停留在简单的 Prompt 迭代，而是搭建了一套标准化的 AI 自动化出图管线。</p>
+            <div class="acts">
+              <div class="act"><span class="n">Ⅰ</span><p><b>要素拆解与 Prompt 参数化</b>通过对比历史失败案例，收敛出「卖点、产品、风格、色调」等核心控制要素。将提示词拆解为由系统自动注入、模型推理和人工填入的模块化参数，实现不同主题、地区的模板化复用。</p></div>
+              <div class="act"><span class="n">Ⅱ</span><p><b>结构化质检机制（QC）</b>设计了两层自动化质检标准。第一关查硬伤；第二关按商业投放标准打分，将抽象的审美转化为程序可读取的量化指标。</p></div>
+            </div>
+          </div>
+          <div class="seg">
+            <div class="seg-h">最终成果</div>
+            <div class="res">
+              <div><p><b>交付质量与产能</b>成功产出 100+ 张直接进投放的标准 Banner，支撑 22 个主题及多个地区的需求。出图从「依赖人工描述」转变为「填参数即可生成」的自动化作业。</p></div>
+              <div><p><b>沉淀可复用方法论</b>固化了包含 10 余个画面要素的通用 Prompt 模板。将 QC 拆解为 KV、DD、QC 三条独立 Workflow，其中自动化 QC 环节已移交研发团队进行后续的自动化排期。</p></div>
+            </div>
+            <div class="kpi kpi-3">
+              <span class="big">100<small>+</small></span><span class="kt">直接进投放的 Banner</span>
+              <span class="big">22</span><span class="kt">个主题</span>
+              <span class="big">45<small>%</small></span><span class="kt">效率提升</span>
+            </div>
+          </div>
+        </div>
+        <div class="split-r">
+          <div class="cap">KV 成片 · 四宫格</div>
+          <div class="kv4">
+            <figure><img src="assets/img/kv/kv1.png" alt="KV 1"></figure>
+            <figure><img src="assets/img/kv/kv3.png" alt="KV 3"></figure>
+            <figure><img src="assets/img/kv/kv5.png" alt="KV 5"></figure>
+            <figure><img src="assets/img/kv/kv7.png" alt="KV 7"></figure>
+          </div>
+          <div class="qc">
+            <div class="cap">QC 评分卡</div>
+            <div class="qc-grp">
+              <div class="qh">第一关 · 硬伤</div>
+              <p class="qv-lead">出现任一项直接判 <b>−1</b></p>
+              <p class="qv">纯黑块 · 画面断裂 · 纯白背景 · 包装上有可读文字或商标 · 促销标签错字</p>
+            </div>
+            <div class="qc-grp">
+              <div class="qh">第二关 · 打分</div>
+              <p class="qv-lead">按商业投放标准打分，加权求和后输出两位小数</p>
+              <div class="bars">
+                <span class="bar-line"><i style="--w:40%"></i><em>主体突出与对比 40%</em></span>
+                <span class="bar-line"><i style="--w:40%"></i><em>左侧留白 40%</em></span>
+                <span class="bar-line"><i style="--w:20%"></i><em>构图与光照 20%</em></span>
+              </div>
+            </div>
+            <button class="link-btn" data-detail="prompt">查看质检 Prompt 原文<span class="lb-arw">→</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">02 — CONTENT</span><span class="r">下一节 · 数据分析<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 03 · DATA 1 ─────────── -->
+  <section class="pane" id="p4" data-label="数据分析 · 问题与编码">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/flower.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">03</span><span class="dash"></span><span>Data / 问题与编码</span></div>
+            <h1 class="h1">蜜雪冰城出海诊断<span class="en">MIXUE INDONESIA</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="split">
+        <div class="split-l">
+          <p class="lede">为面试岗位做实战模拟，独立发起对蜜雪冰城印尼业务的社媒诊断。通过竞品分析与社媒评论拆解，从用户真实反馈里找品牌在策略上、运营上的优化方向。</p>
+          <dl class="codebook">
+            <div><dt>采集</dt><dd>用 Playwright 实爬 <b>@mixueindonesia</b> 的 TikTok 评论区 97 条，逐条保留原文、时间与点赞数（tiktok_comments.py，原始数据 CSV 可追溯）</dd></div>
+            <div><dt>清洗</dt><dd>剔除 13 条噪声（纯表情 / 广告 / 无关语）＋ 11 条抽奖灌水，得 <b>73 条有效样本</b></dd></div>
+            <div><dt>聚类</dt><dd>按履约与兑换、价格锚点、规则困惑、情绪表达四个维度逐条编码</dd></div>
+            <div><dt>对照</dt><dd>竞品 <b>Kopi Kenangan</b> 评论区 102 条走同一套编码表，避免单边解读</dd></div>
+          </dl>
+          <div class="quotes">
+            <div class="q"><div class="qi"><em>kaka kok aku gak dapat 🥺</em>姐姐为啥我没拿到赠品</div><div class="qm">FOMO 与失落——赠品是钩子，没兑现就变成怨气</div></div>
+            <div class="q"><div class="qi"><em>pantes mixue deket rumah ada gambar epep</em>家附近门店贴了海报才知道联动</div><div class="qm">线下反哺线上：门店才是联动的第一触达点</div></div>
+            <div class="q"><div class="qi"><em>Mixue sampah</em>促销单永远下不了</div><div class="qm">履约连续失败后，用户从抱怨活动直接转成骂品牌</div></div>
+          </div>
+          <div class="kpi kpi-3">
+            <span class="big">97</span><span class="kt">原始评论</span>
+            <span class="big">73</span><span class="kt">清洗后有效</span>
+            <span class="big">102</span><span class="kt">竞品对照</span>
+          </div>
+        </div>
+        <div class="split-r">
+          <div class="cap">编码结果 · 73 条有效评论</div>          <div class="scroll-card">
+            <div class="rod l"></div>
+            <div class="leaf">
+              <div class="cgrp">
+                <div class="cap2">Codebook · n = 73</div>
+                <div class="ct">四类主题，前三类全指向同一件事</div>
+                <div class="lgc">
+                  <div class="row2 wide"><span class="who">规则困惑</span><span class="trk"><i class="bmx" style="width:28.8%"></i></span><span class="val">21</span></div>
+                  <div class="row2 wide"><span class="who">履约失败</span><span class="trk"><i class="bmx" style="width:17.8%"></i></span><span class="val">13</span></div>
+                  <div class="row2 wide"><span class="who">兑换断裂</span><span class="trk"><i class="bmx" style="width:12.3%"></i></span><span class="val">9</span></div>
+                  <div class="row2 wide"><span class="who">其他</span><span class="trk"><i class="bkk" style="width:41.1%"></i></span><span class="val">30</span></div>
+                </div>
+                <p class="co2">问「送哪个 / 到几号 / 哪些店」的 21 条，加上没拿到赠品的 13 条、兑换码换不了的 9 条——<b>43 条压在「说到没做到」上</b>。</p>
+              </div>
+              <div class="cgrp">
+                <div class="cap2">Followers · IG</div>
+                <div class="ct">同一时点、同一口径，先看清体量差</div>
+                <div class="lgc">
+                  <div class="row2 wide"><span class="who">蜜雪</span><span class="trk"><i class="bmx" style="width:40.5%"></i></span><span class="val">31.3 万</span></div>
+                  <div class="row2 wide"><span class="who">KK</span><span class="trk"><i class="bkk" style="width:100%"></i></span><span class="val">77.2 万</span></div>
+                </div>
+                <p class="co2">粉丝只有竞品的 <b>40%</b>——再看内容怎么做才有意义。完整三平台对照在下一页。</p>
+              </div>
+              <div class="cgrp">
+                <div class="cap2">Top Words · 评论区高频词</div>
+                <div class="words">
+                  <span>min<em>姐姐</em></span>
+                  <span>beli<em>买</em></span>
+                  <span>dapet<em>拿到</em></span>
+                  <span>pin<em>徽章</em></span>
+                  <span>kode / redeem<em>兑换码</em></span>
+                </div>
+                <p class="co2">五个高频词里三个是「怎么拿」，<b>官方号已成默认客服台</b>——售后问题正堆在内容底下。</p>
+              </div>
+            </div>
+            <div class="rod r"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">03 — DATA</span><span class="r">下一屏 · 洞察与结论<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 03 · DATA 2 ─────────── -->
+  <section class="pane" id="p5" data-label="数据分析 · 洞察与结论">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/flower.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">03</span><span class="dash"></span><span>Data / 洞察与结论</span></div>
+            <h1 class="h1">输在履约，不输创意<span class="en">INSIGHT &amp; CONCLUSION</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="data-grid">
+
+        <!-- 图表 A -->
+        <div class="scroll-card">
+          <div class="rod l"></div>
+          <div class="leaf dense">
+            <div class="cap2">Follower Base</div>
+            <div class="ct">三平台粉丝量：KK 全面领先</div>
+            <div class="grp">
+              <div class="gh"><span>INSTAGRAM</span><span class="gm">满格 77.2 万</span></div>
+              <div class="row2"><span class="who">蜜雪</span><span class="trk"><i class="bmx" style="width:40.5%"></i></span><span class="val">31.3 万</span></div>
+              <div class="row2"><span class="who">KK</span><span class="trk"><i class="bkk" style="width:100%"></i></span><span class="val">77.2 万</span></div>
+            </div>
+            <div class="grp">
+              <div class="gh"><span>TIKTOK</span><span class="gm">满格 22.3 万</span></div>
+              <div class="row2"><span class="who">蜜雪</span><span class="trk"><i class="bmx" style="width:50.4%"></i></span><span class="val">11.3 万</span></div>
+              <div class="row2"><span class="who">KK</span><span class="trk"><i class="bkk" style="width:100%"></i></span><span class="val">22.3 万</span></div>
+            </div>
+            <div class="grp">
+              <div class="gh"><span>YOUTUBE</span><span class="gm">满格 5.15 万</span></div>
+              <div class="row2"><span class="who">蜜雪</span><span class="trk"><i class="bmx" style="width:10%"></i></span><span class="val">5,170</span></div>
+              <div class="row2"><span class="who">KK</span><span class="trk"><i class="bkk" style="width:100%"></i></span><span class="val">5.15 万</span></div>
+            </div>
+            <p class="co2">三平台都是竞品领先（IG 2.5×，TikTok 2.0×，YouTube 约 10×）。<b>每组独立归一，横向长度不可跨组比较。</b></p>
+          </div>
+          <div class="rod r"></div>
+        </div>
+
+        <!-- 图表 C -->
+        <div class="scroll-card">
+          <div class="rod l"></div>
+          <div class="leaf mid-justify">
+            <div class="cap2">Sentiment · n = 73</div>
+            <div class="ct">福利帖评论区：消极 33%</div>
+            <div class="stack">
+              <div class="s-neg" style="width:32.9%">33%</div>
+              <div class="s-neu" style="width:50.7%">51%</div>
+              <div class="s-pos" style="width:16.4%">16%</div>
+            </div>
+            <div class="legend">
+              <span><i class="s-neg"></i>消极 24</span>
+              <span><i class="s-neu"></i>中性 37</span>
+              <span><i class="s-pos"></i>积极 12</span>
+            </div>
+            <p class="co2">福利帖本该以积极为主，<b>负评近半即是信号</b>。24 条负评几乎全部指向履约与兑换。</p>
+          </div>
+          <div class="rod r"></div>
+        </div>
+
+        <!-- 图表 D -->
+        <div class="scroll-card">
+          <div class="rod l"></div>
+          <div class="leaf">
+            <div class="cap2">Peak vs Daily · Log</div>
+            <div class="ct">一条联名，盖过一整年日常</div>
+            <div class="lgc">
+              <div class="row2 wide"><span class="who">蜜雪 日常</span><span class="trk">
+                <i class="tick" style="left:36.1%"></i><i class="tick" style="left:55.5%"></i><i class="tick" style="left:83.3%"></i>
+                <i class="bmx" style="width:33.4%"></i></span><span class="val">50–800</span></div>
+              <div class="row2 wide"><span class="who">蜜雪 峰值</span><span class="trk">
+                <i class="tick" style="left:36.1%"></i><i class="tick" style="left:55.5%"></i><i class="tick" style="left:83.3%"></i>
+                <i class="bmx" style="width:63.3%"></i></span><span class="val">9,517</span></div>
+              <div class="row2 wide"><span class="who">KK 峰值</span><span class="trk">
+                <i class="tick" style="left:36.1%"></i><i class="tick" style="left:55.5%"></i><i class="tick" style="left:83.3%"></i>
+                <i class="bkk" style="width:92.2%"></i></span><span class="val">10.5 万</span></div>
+              <div class="lax"><span style="left:0">50</span><span style="left:36.1%">1k</span><span style="left:55.5%">5k</span><span style="left:83.3%">5万</span><span style="left:100%">20万</span></div>
+            </div>
+            <p class="co2">对数轴，每格一个数量级。日常 50–800 赞，一条 Free Fire 联名冲到 <b>9,517</b>（约 12 倍）。</p>
+          </div>
+          <div class="rod r"></div>
+        </div>
+
+        <!-- 结论 -->
+        <div class="verdict">
+          <div class="cap">结论</div>
+          <p class="vd">内容是放大器，不是创可贴。</p>
+          <p class="vdx">联动输在履约、不输在创意——先修「说到做到」（赠品 SOP + 兑换码内测 + 统一渠道口径），再放大游戏化。</p>
+          <div class="vitems">
+            <div><span>01</span>不炫耀便宜，炫耀「聪明消费」</div>
+            <div><span>02</span>TikTok 优先回应评论区的真实提问</div>
+            <div><span>03</span>把隐藏款徽章放大成集换机制</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer class="foot"><span class="l">03 — DATA</span><span class="r">下一节 · 商业能力<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 04 · BUSINESS 1 ─────────── -->
+  <section class="pane" id="p6" data-label="商业能力 · 宝洁">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/heart.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">04</span><span class="dash"></span><span>Business / 活动统筹</span></div>
+            <h1 class="h1">宝洁春招宣讲会<span class="en">CAMPUS CAMPAIGN</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="split">
+        <div class="split-l">
+          <div class="seg">
+            <div class="seg-h">背景与目标</div>
+            <p class="lede">针对宝洁雇主品牌在武大、华科两所目标院校校招季曝光不足、宣讲会到场转化偏低的问题，担任华中 PGC 活动部部长，承担两场线下宣讲从方案、排期、物料到现场的全流程统筹。目标：社群累计 900 人、单场到场 120–150 人。</p>
+          </div>
+          <div class="seg">
+            <div class="seg-h">核心动作</div>
+            <div class="acts">
+              <div class="act" data-ev="0"><span class="n">Ⅰ</span><p><b>三阶段拆解</b>把秋招周期拆为预热、官宣、推进，每阶段绑定交付物、负责人与截止日。预热期以社群裂变和抽奖蓄水，官宣期集中释放嘉宾与报名入口。</p></div>
+              <div class="act" data-ev="1"><span class="n">Ⅱ</span><p><b>15 个岗位拆到人</b>签到、引导、嘉宾对接、摄影、物料、核销逐岗明确职责与现场话术，物料精确到件数，支撑两场相隔一天的高密度落地。</p></div>
+              <div class="act" data-ev="2"><span class="n">Ⅲ</span><p><b>中期追加投放</b>依据社群裂变的实际入群成本，申请追加 250 元投入抽奖，新增入群近 600 人，把预热期效率放大一倍有余。</p></div>
+            </div>
+          </div>
+          <div class="seg">
+            <div class="seg-h">项目成果</div>
+            <div class="kpi kpi-4">
+              <span class="big">506<small>人</small></span>
+              <span class="big">1715</span>
+              <span class="big">7711<small>元</small></span>
+              <span class="big">90<small>%</small></span>
+              <span class="kt">累计到场</span>
+              <span class="kt">社群（起始 18）</span>
+              <span class="kt">总花费 / 预算 1.5 万</span>
+              <span class="kt">社群目标超额</span>
+            </div>
+          </div>
+        </div>
+        <div class="split-r">
+          <div class="cap">现场图片</div>
+          <figure class="evidence"><img id="evimg" src="assets/img/pg/event-1.jpg" alt="宣讲会现场"></figure>
+          <div class="ev-thumbs">
+            <button class="ev on" data-img="assets/img/pg/event-1.jpg"><img src="assets/img/pg/event-1.jpg" alt=""></button>
+            <button class="ev" data-img="assets/img/pg/event-2.jpg"><img src="assets/img/pg/event-2.jpg" alt=""></button>
+            <button class="ev" data-img="assets/img/pg/event-3.jpg"><img src="assets/img/pg/event-3.jpg" alt=""></button>
+            <button class="ev" data-img="assets/img/pg/campaign-plan.png"><img src="assets/img/pg/campaign-plan.png" alt=""></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">04 — BUSINESS</span><span class="r">下一屏 · 阳狮雀巢<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 04 · BUSINESS 2 ─────────── -->
+  <section class="pane" id="p7" data-label="商业能力 · 阳狮">
+    <header class="head head-unroll">
+      <div class="head-paper">
+        <img class="hp-bottle" src="assets/img/bottles/space.png" alt="">
+        <div class="hp-leaf">
+          <div class="hp-mid">
+            <div class="eyebrow"><span class="num">04</span><span class="dash"></span><span>Business / 媒介策略</span></div>
+            <h1 class="h1">阳狮 · 雀巢怡养<span class="en">MEDIA STRATEGY</span></h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="split p7-split">
+        <div class="split-l">
+          <div class="seg">
+            <div class="seg-h">背景与目标</div>
+            <p class="lede">雀巢怡养产品定位原为中老年奶粉，但家庭健康食品的购买决策者与意见领袖，大多是家里的中年人。因此品牌希望扩大产品定位人群，即扩展到全家营养场景。市场上，伊利欣活、蒙牛悠瑞、飞鹤爱本三条国产线加码，汤臣倍健、Swisse、钙尔奇同时挤压，怡养需要实时、可比地掌握竞品在全媒介的投放预算、点位与节奏。我承担竞品媒介情报与渠道建议，目标是提升品类声量份额（SOV）。</p>
+          </div>
+          <div class="seg">
+            <div class="seg-h">核心动作</div>
+            <div class="insights">
+              <div class="ins"><span class="in">01</span><div><b>搭建全媒介数据库与双轨情报法</b><p>抓取 11,338 条竞品投放记录，结合案头研究，打通跨平台数据口径，建立策略数据底座。</p></div></div>
+              <div class="ins"><span class="in">02</span><div><b>产出三大核心洞察，锁定策略方向</b>
+                <ul class="sub">
+                  <li><i>花费结构变迁</i>数字媒体占比从 27.5% 飙升至 <em>67.1%</em>，判断品类主战场已向数字 + 户外转移，果断放弃传统硬广；</li>
+                  <li><i>三强格局与户外机会</i>蒙牛以 3000 万预算切入户外赛道避开电视红海，锁定户外为线下突破口；</li>
+                  <li><i>长视频为主战场</i>长视频占数字媒体投放总额 <em>79.6%</em>，确认为穿透中老年核心人群的主阵地。</li>
+                </ul>
+              </div></div>
+              <div class="ins"><span class="in">03</span><div><b>制定差异化媒介组合策略</b><p>基于洞察，提出「线上长视频贴片（触达家庭场景）+ 线下地铁包柱（覆盖通勤场景）」的跨屏组合策略。</p></div></div>
+              <div class="ins"><span class="in">04</span><div><b>梳理复盘设想</b><p>提出从「媒介触达 → 品牌认知 → 业务转化」三条口径进行后续效果验证的思路。</p></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="split-r p7-r">
+          <div class="cap">线下落地 · 武汉地铁 2 号线</div>
+          <div class="p7-grid">
+            <figure><img src="assets/img/publicis/ooh-1.jpg" alt="地铁包柱 1"></figure>
+            <figure><img src="assets/img/publicis/ooh-2.jpg" alt="地铁包柱 2"></figure>
+            <figure><img src="assets/img/publicis/ooh-3.jpg" alt="地铁包柱 3"></figure>
+            <div class="p7-out">
+              <div class="seg-h">实习产出</div>
+              <div class="out-row"><b>策略落地</b><p>线上以优酷 / 爱奇艺 / 芒果的长视频贴片为核心，线下落地武汉地铁 2 号线包柱，覆盖家庭与通勤双场景。<em>该组合策略被雀巢市场部采纳。</em></p></div>
+              <div class="out-row"><b>复盘设想</b><p>因实习周期限制，策略尚未经完整验证。已梳理三条复盘口径——媒介层（GRP / Reach）、品牌层（社媒声量 / 搜索指数）、业务层（电商搜索 / 销量 / O2O 到店），可用对照历史同期隔离策略增量。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span class="l">04 — BUSINESS</span><span class="r">最后一节 · 致谢<span class="arw">→</span></span></footer>
+  </section>
+
+  <!-- ─────────── 05 · THANKS ─────────── -->
+  <section class="pane thanks" id="p8" data-label="致谢">
+    <div class="thanks-wrap">
+      <div class="eyebrow center"><span class="num">05</span><span class="dash"></span><span>Thanks</span></div>
+      <h1 class="h1 thanks-h">谢谢你看到这里<span class="en">THANK YOU</span></h1>
+      <p class="thanks-p">如果这份作品集里有你想聊的部分，欢迎随时找我。</p>
+      <div class="contacts">
+        <a href="tel:13181185698"><span class="cl">电话 / 微信</span><span class="cv2">131 8118 5698</span></a>
+        <a href="mailto:13181185698@163.com"><span class="cl">邮箱</span><span class="cv2">13181185698@163.com</span></a>
+        <a href="assets/cv.pdf" download target="_blank" rel="noopener" class="cv-btn"><span class="cl">简历</span><span class="cv2">下载 PDF ↓</span></a>
+      </div>
+      <p class="sign">邴元昊 · 武汉大学市场营销 2026 届 · 北京大学汇丰商学院财经传媒 2026 级在读</p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<!-- ============ 抽屉 ============ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dh">
+    <div><div class="dno" id="dno">—</div><div class="dt" id="dt">—</div></div>
+    <button class="dx" id="dx" aria-label="关闭">×</button>
+  </div>
+  <div class="dbody" id="dbody"></div>
+</aside>
+
+<!-- ============ 进度 ============ -->
+<div class="progress">
+  <span class="p-label" id="plabel">01 / 09</span>
+  <div class="p-line"><div class="p-seg" id="pseg"></div><div class="p-boat" id="pboat"></div></div>
+  <div class="p-dots" id="dots"></div>
+  <div class="p-arrows">
+    <button class="arrow" id="prev" aria-label="上一屏">◀</button>
+    <button class="arrow" id="next" aria-label="下一屏">▶</button>
+  </div>
+</div>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>
